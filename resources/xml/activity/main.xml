@@ -1,0 +1,13 @@
+<brls:AppletFrame
+    iconInterpolation="linear"
+    headerHidden="false"
+    footerHidden="false">
+    <brls:Box>
+        <brls:Label
+            positionType="absolute"
+            positionBottom="10"
+            positionRight="10"
+            fontSize="12"
+            text="test"/>
+    </brls:Box>
+</brls:AppletFrame>
