@@ -13,7 +13,7 @@ set(VERSION_MAJOR "0")
 set(VERSION_MINOR "0")
 set(VERSION_REVISION "1")
 set(PROJECT_AUTHOR "nesktf")
-set(PROJECT_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/icon/icon.jpg)
+set(PROJECT_ICON ${PROJECT_RESOURCES}/img/icon.jpg)
 set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}")
 
 # Add src files for switch build
@@ -33,7 +33,7 @@ add_custom_target(${PROJECT_NAME}.nro
   DEPENDS ${PROJECT_NAME}
   COMMAND ${NX_NACPTOOL_EXE} --create ${PROJECT_NAME} ${PROJECT_AUTHOR} ${APP_VERSION} ${PROJECT_NAME}.nacp
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_RESOURCES} ${CMAKE_BINARY_DIR}/resources
-  COMMAND ${CMAKE_COMMAND} -E remove -f ${BUILD_FONT_DIR}/*.txt ${BUILD_FONT_DIR}/switch_font.ttf ${BUILD_FONT_DIR}/keymap*.ttf
+  COMMAND ${CMAKE_COMMAND} -E remove -f ${BUILD_FONT_DIR}/switch_font.ttf
   COMMAND ${NX_ELF2NRO_EXE} ${PROJECT_NAME}.elf ${PROJECT_NAME}.nro --icon=${PROJECT_ICON} --nacp=${PROJECT_NAME}.nacp --romfsdir=${CMAKE_BINARY_DIR}/resources
   ALL
 )
