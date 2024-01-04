@@ -18,7 +18,9 @@ set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}")
 
 # Add src files for switch build
 file(GLOB_RECURSE MAIN_SRC "switchmp/src/*.cpp" )
-list(APPEND MAIN_SRC ${BOREALIS_LIBRARY}/lib/platforms/switch/switch_wrapper.c)
+if (PLATFORM_SWITCH)
+  list(APPEND MAIN_SRC ${BOREALIS_LIBRARY}/lib/platforms/switch/switch_wrapper.c)
+endif()
 
 # Compile libs
 add_subdirectory(lib)
