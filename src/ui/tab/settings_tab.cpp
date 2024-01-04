@@ -1,4 +1,4 @@
-#include "tab/settings.hpp"
+#include "ui/tab/settings_tab.hpp"
 
 namespace tab {
 Settings::Settings() {

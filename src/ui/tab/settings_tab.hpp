@@ -1,9 +1,9 @@
 #pragma once
 
-#include "view/auto_tab_frame.hpp"
+#include "ui/view/auto_tab_frame.hpp"
 
 namespace tab {
-class Settings : public AttachedView {
+class Settings : public view::AttachedView {
 public:
     Settings();
     static brls::View* create();

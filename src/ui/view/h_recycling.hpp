@@ -1,7 +1,8 @@
 #pragma once
 
-#include <view/recycling_grid.hpp>
+#include "ui/view/recycling_grid.hpp"
 
+namespace view {
 class HRecyclerContentBox;
 
 class HRecyclerFrame : public brls::HScrollingFrame, public RecyclingView {
@@ -63,3 +64,4 @@ private:
     void addCellAt(size_t index, int downSide);
     bool checkHeight();
 };
+}

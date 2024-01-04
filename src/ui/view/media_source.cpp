@@ -1,4 +1,4 @@
-#include "view/media_source.hpp"
+#include "ui/view/media_source.hpp"
 
 namespace view {
 

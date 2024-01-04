@@ -6,6 +6,7 @@
 
 #include <borealis.hpp>
 
+namespace view {
 class RecyclingView;
 
 class RecyclingGridItem : public brls::Box {
@@ -222,3 +223,4 @@ public:
 private:
     NVGcolor background = brls::Application::getTheme()["color/grey_3"];
 };
+}

@@ -1,16 +1,15 @@
 #include <borealis.hpp>
 #include <cstdlib>
 
-#include "activity/main_activity.hpp"
-#include "view/auto_tab_frame.hpp"
-#include "view/svg_image.hpp"
-#include "view/recycling_grid.hpp"
-#include "view/h_recycling.hpp"
-#include "view/item_box.hpp"
-#include "tab/settings.hpp"
-#include "tab/home.hpp"
-#include "tab/video.hpp"
-#include "tab/audio.hpp"
+#include "ui/activity/main_activity.hpp"
+#include "ui/view/auto_tab_frame.hpp"
+#include "ui/view/svg_image.hpp"
+#include "ui/view/recycling_grid.hpp"
+#include "ui/view/h_recycling.hpp"
+#include "ui/tab/settings_tab.hpp"
+#include "ui/tab/home_tab.hpp"
+#include "ui/tab/video_tab.hpp"
+#include "ui/tab/audio_tab.hpp"
 
 int main(int argc, char* argv[]) {
   // Init borealis
@@ -24,11 +23,10 @@ int main(int argc, char* argv[]) {
   brls::Logger::info("createWindow done");
 
   // Views
-  brls::Application::registerXMLView("SVGImage", SVGImage::create);
-  brls::Application::registerXMLView("AutoTabFrame", AutoTabFrame::create);
-  brls::Application::registerXMLView("RecyclerFrame", RecyclingGrid::create);
-  brls::Application::registerXMLView("HRecyclerFrame", HRecyclerFrame::create);
-  brls::Application::registerXMLView("ItemBox", view::ItemBox::create);
+  brls::Application::registerXMLView("SVGImage", view::SVGImage::create);
+  brls::Application::registerXMLView("AutoTabFrame", view::AutoTabFrame::create);
+  brls::Application::registerXMLView("RecyclerFrame", view::RecyclingGrid::create);
+  brls::Application::registerXMLView("HRecyclerFrame", view::HRecyclerFrame::create);
 
   // Tabs
   brls::Application::registerXMLView("HomeTab", tab::Home::create);

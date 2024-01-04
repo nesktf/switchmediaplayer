@@ -1,5 +1,6 @@
-#include "view/h_recycling.hpp"
+#include "ui/view/h_recycling.hpp"
 
+namespace view {
 class HRecyclerContentBox : public brls::Box {
 public:
     HRecyclerContentBox(HRecyclerFrame* recycler) : Box(brls::Axis::ROW), recycler(recycler) {}
@@ -321,3 +322,4 @@ void HRecyclerFrame::setPaddingLeft(float left) {
 void HRecyclerFrame::onNextPage(const std::function<void()>& callback) { this->nextPageCallback = callback; }
 
 brls::View* HRecyclerFrame::create() { return new HRecyclerFrame(); }
+}

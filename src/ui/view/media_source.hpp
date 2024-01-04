@@ -1,6 +1,6 @@
 #pragma once
 
-#include "view/media_cell.hpp"
+#include "ui/view/media_cell.hpp"
 
 namespace view {
 

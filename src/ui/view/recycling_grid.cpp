@@ -3,8 +3,9 @@
 //
 
 #include <utility>
-#include "view/recycling_grid.hpp"
+#include "ui/view/recycling_grid.hpp"
 
+namespace view {
 /// RecyclingGridItem
 
 RecyclingGridItem::RecyclingGridItem() {
@@ -659,4 +660,5 @@ RecyclingGridContentBox::RecyclingGridContentBox(RecyclingGrid* recycler) : Box(
 
 brls::View* RecyclingGridContentBox::getNextFocus(brls::FocusDirection direction, brls::View* currentView) {
     return this->recycler->getNextCellFocus(direction, currentView);
+}
 }

@@ -1,4 +1,4 @@
-#include "tab/audio.hpp"
+#include "ui/tab/audio_tab.hpp"
 
 namespace tab {
 

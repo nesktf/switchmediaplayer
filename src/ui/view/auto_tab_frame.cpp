@@ -17,8 +17,8 @@
     limitations under the License.
 */
 
-#include "view/auto_tab_frame.hpp"
-#include "view/svg_image.hpp"
+#include "ui/view/auto_tab_frame.hpp"
+#include "ui/view/svg_image.hpp"
 
 /**
  * auto tab frame
@@ -26,6 +26,7 @@
 using namespace brls::literals;
 using namespace brls;
 
+namespace view {
 const std::string autoTabFrameContentXML = R"xml(
     <brls:Box
         width="auto"
@@ -921,3 +922,4 @@ void AttachedView::registerTabAction(std::string hintText, enum brls::Controller
 AttachedView::AttachedView() { this->setGrow(1); }
 
 AttachedView::~AttachedView() { brls::Logger::debug("delete AttachedView"); }
+}

@@ -2,9 +2,10 @@
 // Created by fang on 2022/9/17.
 //
 
-#include "view/svg_image.hpp"
 #include <borealis/core/cache_helper.hpp>
+#include "ui/view/svg_image.hpp"
 
+namespace view {
 SVGImage::SVGImage() {
     this->registerFilePathXMLAttribute("svg", [this](const std::string& value) { this->setImageFromSVGFile(value); });
 
@@ -120,4 +121,5 @@ void SVGImage::draw(
     nvgFill(vg);
 
     nvgRestore(vg);
+}
 }

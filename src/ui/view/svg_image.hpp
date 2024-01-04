@@ -7,6 +7,7 @@
 #include <borealis.hpp>
 #include <lunasvg.h>
 
+namespace view {
 class SVGImage : public brls::Image {
 public:
     SVGImage();
@@ -33,3 +34,4 @@ private:
     std::string filePath;
     float angle = 0;
 };
+}

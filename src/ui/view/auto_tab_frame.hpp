@@ -19,7 +19,9 @@
 
 #pragma once
 
-#include "borealis.hpp"
+#include <borealis.hpp>
+
+namespace view {
 
 typedef std::function<brls::View*(void)> TabViewCreator;
 
@@ -220,3 +222,4 @@ private:
     NVGcolor tabItemActiveBackgroundColor = nvgRGBA(0, 0, 0, 0);
     NVGcolor tabItemActiveTextColor = brls::Application::getTheme()["brls/text"];
 };
+}

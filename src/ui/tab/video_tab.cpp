@@ -1,4 +1,4 @@
-#include "tab/video.hpp"
+#include "ui/tab/video_tab.hpp"
 
 namespace tab {
 
