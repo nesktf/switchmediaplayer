@@ -41,4 +41,4 @@ add_custom_target(${PROJECT_NAME}.nro
 # Include things
 target_include_directories(${PROJECT_NAME} PRIVATE switchmp/include)
 # target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sections -Wunused-variable)
-target_link_libraries(${PROJECT_NAME} PRIVATE borealis)
+target_link_libraries(${PROJECT_NAME} PRIVATE borealis lunasvg)

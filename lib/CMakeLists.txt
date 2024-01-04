@@ -1,4 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 
+# lunasvg
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+add_subdirectory(lunasvg EXCLUDE_FROM_ALL)
+
 # Borealis
 add_subdirectory(borealis/library)

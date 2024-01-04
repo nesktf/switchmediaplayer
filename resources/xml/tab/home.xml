@@ -1,0 +1,69 @@
+<brls:Box
+    width="auto"
+    height="auto">
+
+    <brls:ScrollingFrame
+        width="auto"
+        height="auto"
+        marginTop="0"
+        grow="1.0">
+
+        <brls:Box
+            width="auto"
+            height="auto"
+            axis="column"
+            alignItems="stretch"
+            paddingLeft="@style/brls/tab_frame/content_padding_sides"
+            paddingRight="@style/brls/tab_frame/content_padding_sides"
+            paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
+            paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">
+
+            <brls:Header
+                id="tab/home/playing_header"
+                width="auto"
+                height="auto"
+                title="@i18n/main/tab/home/playing_header"
+                marginBottom="10px"/>
+            <HRecyclerFrame
+                id="tab/home/playing_frame"
+                width="auto"
+                height="200"
+                itemWidth="200"/>
+            <brls:Box
+                id="tab/home/playing_hint"
+                width="100%"
+                height="200"
+                alignItems="center"
+                justifyContent="center">
+                <brls:Label
+                    textColor="@theme/color/grayed_out"
+                    text="@i18n/main/tab/home/playing_hint"/>
+            </brls:Box>
+
+            <brls:Header
+                id="tab/home/history_header"
+                width="auto"
+                height="auto"
+                title="@i18n/main/tab/home/history_header"
+                marginBottom="10px"/>
+            <HRecyclerFrame
+                id="tab/home/history_frame"
+                width="auto"
+                height="200"
+                itemWidth="200"/>
+            <brls:Box
+                id="tab/home/history_hint"
+                width="100%"
+                height="200"
+                alignItems="center"
+                justifyContent="center">
+                <brls:Label
+                    textColor="@theme/color/grayed_out"
+                    text="@i18n/main/tab/home/history_hint"/>
+            </brls:Box>
+
+        </brls:Box>
+
+    </brls:ScrollingFrame>
+
+</brls:Box>

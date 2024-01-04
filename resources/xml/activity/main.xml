@@ -1,13 +1,53 @@
 <brls:AppletFrame
     iconInterpolation="linear"
-    headerHidden="false"
+    headerHidden="true"
     footerHidden="false">
-    <brls:Box>
-        <brls:Label
-            positionType="absolute"
-            positionBottom="10"
-            positionRight="10"
-            fontSize="12"
-            text="test"/>
+    <brls:Box
+        axis="column"
+        width="100%"
+        height="100%">
+        <AutoTabFrame
+            id="main/tab_frame"
+            grow="1"
+            tabBackgroundColor="@theme/color/grey_1"
+            tabItemActiveTextColor="@theme/color/switchmp">
+
+            <!-- Home Tab -->
+            <!-- https://www.svgrepo.com/svg/521703/home -->
+            <Tab label=""
+                fontSize="18"
+                icon="@res/svg/tab_home.svg"
+                iconActivate="@res/svg/tab_home.svg">
+                <HomeTab />
+            </Tab>
+
+            <!-- Audio Tab -->
+            <!-- https://www.svgrepo.com/svg/506329/speaker-2 -->
+            <Tab label=""
+                fontSize="18"
+                icon="@res/svg/tab_audio.svg"
+                iconActivate="@res/svg/tab_audio.svg">
+                <AudioTab />
+            </Tab>
+
+            <!-- Video Tab -->
+            <!-- https://www.svgrepo.com/svg/532727/video -->
+            <Tab label=""
+                fontSize="18"
+                icon="@res/svg/tab_video.svg"
+                iconActivate="@res/svg/tab_video.svg">
+                <VideoTab />
+            </Tab>
+
+            <!-- Settings Tab -->
+            <!-- https://www.svgrepo.com/svg/491639/gear -->
+             <Tab label=""
+                 fontSize="18"
+                 icon="@res/svg/tab_settings.svg"
+                 iconActivate="@res/svg/tab_settings.svg">
+                <SettingsTab/>
+            </Tab>
+
+        </AutoTabFrame>
     </brls:Box>
 </brls:AppletFrame>
