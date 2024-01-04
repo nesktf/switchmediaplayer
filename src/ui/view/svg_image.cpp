@@ -2,8 +2,8 @@
 // Created by fang on 2022/9/17.
 //
 
-#include <borealis/core/cache_helper.hpp>
 #include "ui/view/svg_image.hpp"
+#include <borealis/core/cache_helper.hpp>
 
 namespace view {
 SVGImage::SVGImage() {
