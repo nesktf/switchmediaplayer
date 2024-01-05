@@ -1,0 +1,77 @@
+<brls:AppletFrame
+  iconInterpolation="linear"
+  headerHidden="true"
+  footerHidden="true">
+
+  <brls:Box
+    axis="column"
+    width="auto"
+    height="auto">
+
+    <brls:Box
+      axis="row"
+      width="auto"
+      height="80%">
+
+      <brls:Box
+        axis="column"
+        width="65%"
+        height="auto"
+        alignItems="center"
+        justifyContent="center">
+
+        <brls:Image
+          id="view/audio_player/cover_image"
+          scalingType="fit"
+          height="70%"
+          image="@res/img/cover_test0.jpg"/>
+
+        <brls:Box
+          axis="column"
+          width="auto"
+          padding="15px"
+          alignItems="center"
+          height="auto">
+
+          <brls:Label
+            id="view/audio_player/name_label"
+            fontSize="18"
+            text="current_song"/>
+          
+          <brls:Label
+            id="view/audio_player/artist_label"
+            fontSize="15"
+            text="current_artist"/>
+
+        </brls:Box>
+
+      </brls:Box>
+
+      <brls:Box
+        axis="column"
+        width="35%"
+        height="auto"
+        justifyContent="center">
+
+        <brls:Label
+          text="queue_contents" />
+
+      </brls:Box>
+
+    </brls:Box>
+
+    <brls:Box
+      axis="column"
+      width="auto"
+      height="auto"
+      alignItems="center"
+      justifyContent="center">
+
+      <brls:Label
+        text="player_controls" />      
+
+    </brls:Box>
+
+  </brls:Box>
+
+</brls:AppletFrame>

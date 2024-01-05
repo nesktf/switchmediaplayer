@@ -1,17 +1,33 @@
 #pragma once
 
 #include "ui/view/media_cell.hpp"
+#include "ui/activity/audio_player.hpp"
 
 namespace view {
 
-class MediaSource : public RecyclingGridDataSource {
-public:
-    MediaSource(size_t item_count);
-    size_t getItemCount() override { return item_count; };
-    RecyclingGridItem* cellForRow(RecyclingView* recycler, size_t index) override;
-    void onItemSelected(brls::View* recycler, size_t index) override;
-    void clearData() override;
-protected:
-    size_t item_count;
+enum class MediaCellType {
+  NONE,
+  AUDIO_FILE_CELL,
+  VIDEO_FILE_CELL,
+  ALBUM_CELL,
+  BROWSER_CELL
 };
+
+struct MediaCellData {
+  std::string title;
+  std::string subtitle;
+  std::string image_path; 
+  MediaCellType type;
+};
+
+class MediaCellSource : public RecyclingGridDataSource {
+public:
+  MediaCellSource() {};
+  size_t getItemCount() override { return data.size(); };
+  RecyclingGridItem* cellForRow(RecyclingView* recycler, size_t index) override;
+  void onItemSelected(brls::View* recycler, size_t index) override;
+  void clearData() override;
+  std::vector<MediaCellData> data;
+};
+
 }

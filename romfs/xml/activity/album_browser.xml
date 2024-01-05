@@ -1,0 +1,75 @@
+<brls:AppletFrame
+  iconInterpolation="linear"
+  headerHidden="true"
+  footerHidden="false">
+
+  <brls:Box
+    axis="column"
+    width="auto"
+    height="auto">
+  
+    <brls:Box
+      axis="row"
+      width="auto"
+      height="30%"
+      alignItems="center"
+      justifyContent="center">
+
+      <brls:Box
+        axis="row"
+        width="70%"
+        height="auto"
+        padding="20px">
+
+        <brls:Image
+          image="@res/img/cover_test0.jpg"/>
+
+        <brls:Box
+          axis="column"
+          width="auto"
+          height="auto"
+          paddingTop="20px"
+          paddingLeft="20px">
+          <brls:Label
+            id="album_browser/title"
+            fontSize="15"
+            text="album_title"/>
+          <brls:Label
+            id="album_browser/artists"
+            fontSize="12"
+            text="album_artists"/>
+          <brls:Label
+            id="album_browser/duration"
+            fontSize="12"
+            text="album_duration"/>
+        </brls:Box>
+
+      </brls:Box>
+
+      <brls:Box
+        axis="row"
+        width="auto"
+        padding="20px">
+
+        <brls:Label
+          text="album_buttons"/>
+
+      </brls:Box>
+
+    </brls:Box>
+
+    <brls:Box
+      axis="column"
+      width="auto"
+      height="auto"
+      alignItems="center"
+      paddingTop="20px">
+
+      <brls:Label
+        text="album_content"/>
+
+    </brls:Box>
+
+  </brls:Box>
+
+</brls:AppletFrame>

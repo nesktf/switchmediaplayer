@@ -1,0 +1,23 @@
+<brls:AppletFrame
+  iconInterpolation="linear"
+  headerHidden="true"
+  footerHidden="false">
+
+  <brls:Box
+    axis="column"
+    width="auto"
+    height="auto">
+
+    <RecyclerFrame
+      id="frame/content"
+      grow="1"
+      spanCount="5"
+      padding="30px"
+      width="auto"
+      itemHeight="200px"
+      height="auto" />
+
+  </brls:Box>
+
+
+</brls:AppletFrame>

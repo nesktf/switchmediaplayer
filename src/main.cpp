@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
   brls::Theme::getLightTheme().addColor("color/grayed_out", nvgRGB(104, 104, 104));
 
   // Start Borealis
-  brls::Application::pushActivity(new MainActivity());
+  brls::Application::pushActivity(new activity::MainActivity());
   while(brls::Application::mainLoop())
     ;
 

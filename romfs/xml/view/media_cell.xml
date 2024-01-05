@@ -1,81 +1,47 @@
 <brls:Box
-    highlightCornerRadius="8"
-    axis="column"
-    width="200"
-    height="200">
+  id="view/media_cell/root"
+  highlightCornerRadius="8"
+  axis="column">
+
+  <brls:Image
+    id="view/media_cell/image"
+    backgroundColor="@theme/color/grey_1"
+    scalingType="fill"
+    width="100%"
+    height="auto"
+    cornerRadius="0"/>
+
+  <brls:Box
+    id="view/media_cell/shadow"
+    positionBottom="0"
+    positionType="absolute"
+    background="vertical_linear"
+    paddingLeft="10"
+    paddingRight="10"
+    width="100%"
+    height="100%"
+    alignItems="center"/>
 
     <brls:Box
-        axis="row"
-        width="100%"
-        grow="1.0">
+      axis="column"
+      height="20%"
+      alignItems="center"
+      backgroundColor="#353535">
 
-        <brls:Image
-            backgroundColor="@theme/color/grey_1"
-            scalingType="fill"
-            width="100%"
-            height="100%"
-            image="@res/img/icon.jpg"
-            cornerRadius="4"/>
-
-        <brls:Label
-            positionType="absolute"
-            positionTop="8"
-            positionRight="0"
-            height="24"
-            text="AMOMO"/>
-
-        <brls:Box
-            positionBottom="0"
-            positionType="absolute"
-            background="vertical_linear"
-            paddingLeft="10"
-            paddingRight="10"
-            width="100%"
-            height="100%"
-            alignItems="center">
-            <brls:Image
-                scalingType="fit"
-                height="16"
-                image="@res/img/icon.jpg" />
-
-            <brls:Label
-                positionType="absolute"
-                positionRight="0"
-                textColor="#FFFFFF"
-                fontSize="16"
-                text="AMUMU"/>
-
-        </brls:Box>
-
-        <brls:Box
-            wireframe="false"
-            positionType="absolute"
-            positionBottom="0"
-            width="100%"
-            height="2"
-            backgroundColor="#353535">
-            <brls:Rectangle
-                height="2"
-                width="50%"
-                color="@theme/color/switchmp" />
-        </brls:Box>
-
-        <brls:Box
-            axis="column"
-            height="50"
-            alignItems="center">
-            <brls:Label
-                wireframe="false"
-                marginTop="5"
-                fontSize="18"
-                text="AMIMI"/>
-            <brls:Label
-                wireframe="false"
-                fontSize="13"
-                marginTop="5"
-                textColor="@theme/color/grey_1" />
-        </brls:Box>
+      <brls:Label
+        id="view/media_cell/title"
+        wireframe="false"
+        fontSize="15"
+        marginTop="5"
+        text="title"/>
+      <brls:Label
+        id="view/media_cell/subtitle"
+        wireframe="false"
+        fontSize="12"
+        marginTop="5"
+        text="subtitle"/>
 
     </brls:Box>
+
 
 </brls:Box>
