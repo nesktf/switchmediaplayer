@@ -7,8 +7,8 @@ namespace tab {
 view::MediaCellSource* getAudioContent(void) {
   view::MediaCellSource* source = new view::MediaCellSource();
   source->data = {
-    {"/mnt/marisa/music"},
-    {"/mnt/patchouli/music"}
+    {.title="/mnt/marisa",.path="/mnt/marisa"},
+    {.title="/mnt/patchouli",.path="/mnt/patchouli"}
   };
   for (auto& item : source->data)
     item.type = view::MediaCellType::BROWSER_CELL;

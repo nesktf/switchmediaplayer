@@ -8,6 +8,18 @@
     width="auto"
     height="auto">
 
+    <brls:Box
+      width="auto"
+      height="auto"
+      padding="20px">
+
+      <brls:Label
+        id="view/browser/path_label"
+        fontSize="15"
+        text="path_label"/>
+
+    </brls:Box>
+
     <RecyclerFrame
       id="frame/content"
       grow="1"
@@ -18,6 +30,5 @@
       height="auto" />
 
   </brls:Box>
-
 
 </brls:AppletFrame>

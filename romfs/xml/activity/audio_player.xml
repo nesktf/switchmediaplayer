@@ -1,7 +1,7 @@
 <brls:AppletFrame
   iconInterpolation="linear"
   headerHidden="true"
-  footerHidden="true">
+  footerHidden="false">
 
   <brls:Box
     axis="column"

@@ -21,7 +21,10 @@ void MediaCellSource::onItemSelected(brls::View* recycler, size_t index) {
     brls::Application::pushActivity(new activity::AudioPlayer(), brls::TransitionAnimation::NONE);
   }
   else if (item.type == MediaCellType::BROWSER_CELL) {
-    brls::Application::pushActivity(new activity::MediaBrowser(), brls::TransitionAnimation::NONE);
+    if (!item.path.empty())
+      brls::Application::pushActivity(new activity::FileBrowser(item.path), brls::TransitionAnimation::NONE);
+    else
+      brls::Application::pushActivity(new activity::FileBrowser("/sdr/Files/Docs/Dev/CPP/SwitchMediaPlayer"), brls::TransitionAnimation::NONE);
   }
   else if (item.type == MediaCellType::ALBUM_CELL) {
     brls::Application::pushActivity(new activity::AlbumBrowser(), brls::TransitionAnimation::NONE);

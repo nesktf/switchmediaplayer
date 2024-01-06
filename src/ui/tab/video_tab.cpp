@@ -5,7 +5,7 @@ namespace tab {
 view::MediaCellSource* getVideoContent(void) {
   view::MediaCellSource* source = new view::MediaCellSource();
   source->data = {
-    {"/mnt/marisa/video"}
+    {.title="/mnt/marisa",.path="/mnt/marisa"}
   };
   for(auto& item : source->data)
     item.type = view::MediaCellType::BROWSER_CELL;

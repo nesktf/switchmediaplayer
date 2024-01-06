@@ -17,6 +17,7 @@ struct MediaCellData {
   std::string title;
   std::string subtitle;
   std::string image_path; 
+  std::string path;
   MediaCellType type;
 };
 
