@@ -1,8 +1,10 @@
 #include "ui/view/media_source.hpp"
 
-#include "ui/activity/media_browser.hpp"
-#include "ui/activity/album_browser.hpp"
-#include "ui/activity/video_player.hpp"
+#include "ui/view/media_cell.hpp"
+#include "ui/view/audio_player.hpp"
+#include "ui/view/media_browser.hpp"
+#include "ui/view/album_browser.hpp"
+#include "ui/view/video_player.hpp"
 
 namespace view {
 RecyclingGridItem* MediaCellSource::cellForRow(RecyclingView* recycler, size_t index) {
@@ -18,19 +20,20 @@ RecyclingGridItem* MediaCellSource::cellForRow(RecyclingView* recycler, size_t i
 void MediaCellSource::onItemSelected(brls::View* recycler, size_t index) {
   auto& item = data[index];
   if (item.type == MediaCellType::AUDIO_FILE_CELL) {
-    brls::Application::pushActivity(new activity::AudioPlayer(), brls::TransitionAnimation::NONE);
+    AudioPlayer* player = new AudioPlayer();
+    recycler->present(player);
   }
   else if (item.type == MediaCellType::BROWSER_CELL) {
-    if (!item.path.empty())
-      brls::Application::pushActivity(new activity::FileBrowser(item.path), brls::TransitionAnimation::NONE);
-    else
-      brls::Application::pushActivity(new activity::FileBrowser("/sdr/Files/Docs/Dev/CPP/SwitchMediaPlayer"), brls::TransitionAnimation::NONE);
+    FileBrowser* browser = new FileBrowser("/");
+    recycler->present(browser);
   }
   else if (item.type == MediaCellType::ALBUM_CELL) {
-    brls::Application::pushActivity(new activity::AlbumBrowser(), brls::TransitionAnimation::NONE);
+    AlbumBrowser* browser = new AlbumBrowser();
+    recycler->present(browser);
   }
   else if (item.type == MediaCellType::VIDEO_FILE_CELL) {
-    brls::Application::pushActivity(new activity::VideoPlayer(), brls::TransitionAnimation::NONE);
+    VideoPlayer* player = new VideoPlayer("/sdr/Files/Media/Media - Sync/Music/@Videogames/@Arrangements/ShibayanRecords/TOHO BOSSA NOVA 8 [例大祭16]/09. [坂上なち] ふわふわどれみー.opus");
+    brls::sync([player]() { brls::Application::giveFocus(player); });
   }
 }
 

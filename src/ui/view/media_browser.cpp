@@ -1,6 +1,9 @@
-#include "ui/activity/media_browser.hpp"
+#include "ui/view/media_browser.hpp"
 
-namespace activity {
+#include "ui/view/video_player.hpp"
+#include "ui/view/media_cell.hpp"
+
+namespace view {
 
 bool fileIsHidden(const std::filesystem::path path) {
   std::filesystem::path::string_type p {path.filename()};
@@ -20,17 +23,25 @@ view::RecyclingGridItem* BrowserSource::cellForRow(view::RecyclingView* recycler
 
 void BrowserSource::onItemSelected(brls::View* recycler, size_t index) {
   auto& item = data[index];
-  brls::Logger::debug(std::to_string(index));
+  brls::Logger::debug("File: {}, index: {}", item.path, std::to_string(index));
   if (item.type == BrowserCellType::FOLDER)
     item.activity->modifyPath(item.path);
+  else if (item.type == BrowserCellType::FILE) {
+    view::VideoPlayer* player = new view::VideoPlayer(item.path);
+    brls::sync([player]() { brls::Application::giveFocus(player); });
+  }
 }
 
 void BrowserSource::clearData() {
   data.clear();
 }
 
-void BrowserActivity::onContentAvailable() {
+BrowserActivity::BrowserActivity() {
+  inflateFromXMLRes("xml/view/media_browser.xml");
   this->content_frame->registerCell("cell", view::MediaCell::create);
+}
+
+void BrowserActivity::init() {
   this->content_frame->setDataSource(parseFolder());
   this->path_label->setText(curr_path);
 
@@ -49,11 +60,13 @@ void BrowserActivity::modifyPath(const std::string& path) {
   brls::sync([this]() {brls::Application::giveFocus(content_frame);});
 }
 
-BrowserActivity::BrowserActivity(const std::string& path) {
+BrowserActivity::BrowserActivity(const std::string& path) : BrowserActivity() {
   curr_path = std::filesystem::path { path };
 }
 
-FileBrowser::FileBrowser(const std::string& path) : BrowserActivity(path) {}
+FileBrowser::FileBrowser(const std::string& path) : BrowserActivity(path) {
+  this->init();
+}
 
 BrowserSource* FileBrowser::parseFolder() {
   BrowserSource* source = new BrowserSource();

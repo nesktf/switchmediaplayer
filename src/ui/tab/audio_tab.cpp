@@ -1,6 +1,7 @@
 #include "ui/tab/audio_tab.hpp"
 
-#include "ui/activity/audio_player.hpp"
+#include "ui/view/media_source.hpp"
+#include "ui/view/media_cell.hpp"
 
 namespace tab {
 

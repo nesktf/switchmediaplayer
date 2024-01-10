@@ -15,15 +15,30 @@ set(VERSION_REVISION "1")
 set(PROJECT_AUTHOR "nesktf")
 set(PROJECT_ICON ${PROJECT_RESOURCES}/img/icon.jpg)
 set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # Add src files for switch build
 file(GLOB_RECURSE MAIN_SRC "src/*.cpp" )
 if (PLATFORM_SWITCH)
   list(APPEND MAIN_SRC ${BOREALIS_LIBRARY}/lib/platforms/switch/switch_wrapper.c)
+  list(APPEND APP_PLATFORM_OPTION -DDEBUG -D_DEBUG -D_GLIBCXX_ASSERTIONS)
 endif()
 
 # Compile libs
 add_subdirectory(lib)
+
+# MPV stuff
+if (PLATFORM_DESKTOP)
+  find_package(MPV REQUIRED)
+  list(APPEND APP_PLATFORM_INCLUDE ${MPV_INCLUDE_DIR})
+  list(APPEND APP_PLATFORM_LIB ${MPV_LIBRARY})
+else()
+  find_package(PkgConfig REQUIRED)
+  pkg_search_module(MPV REQUIRED mpv)
+  list(APPEND APP_PLATFORM_INCLUDE ${MPV_INCLUDE_DIR})
+  list(APPEND APP_PLATFORM_LIB ${MPV_STATIC_LIBRARIES})
+  list(APPEND APP_PLATFORM_LINK_OPTION -L${MPV_LIBRARY_DIRS})
+endif()
 
 # Main Target
 program_target(${PROJECT_NAME} "${MAIN_SRC}")
@@ -41,6 +56,7 @@ add_custom_target(${PROJECT_NAME}.nro
 )
 
 # Include things
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-# target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sections -Wunused-variable)
-target_link_libraries(${PROJECT_NAME} PRIVATE borealis lunasvg)
+target_include_directories(${PROJECT_NAME} PRIVATE src ${APP_PLATFORM_INCLUDE})
+target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sections -Wunused-variable ${APP_PLATFORM_OPTION})
+target_link_libraries(${PROJECT_NAME} PRIVATE borealis lunasvg ${APP_PLATFORM_LIB})
+target_link_options(${PROJECT_NAME} PRIVATE ${APP_PLATFORM_LINK_OPTION})

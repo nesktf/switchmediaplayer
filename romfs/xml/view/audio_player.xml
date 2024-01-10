@@ -1,7 +1,9 @@
-<brls:AppletFrame
-  iconInterpolation="linear"
-  headerHidden="true"
-  footerHidden="false">
+<brls:Box
+  width="100%"
+  height="100%"
+  axis="column"
+  justifyContent="spaceBetween"
+  alignItems="center">
 
   <brls:Box
     axis="column"
@@ -74,4 +76,4 @@
 
   </brls:Box>
 
-</brls:AppletFrame>
+</brls:Box>

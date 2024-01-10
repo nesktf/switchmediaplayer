@@ -1,0 +1,19 @@
+<brls:Box
+  width="100%"
+  height="100%"
+  axis="column"
+  justifyContent="spaceBetween"
+  alignItems="center">
+
+  <brls:Box
+    width="50"
+    height="50"
+    alignItems="center"
+    hideHighlightBackground="true"
+    highlightCornerRadius="10"
+    backgroundColor="#303030A0"
+    focusable="true">
+
+  </brls:Box>
+
+</brls:Box>

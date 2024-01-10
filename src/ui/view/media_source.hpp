@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ui/view/media_cell.hpp"
-#include "ui/activity/audio_player.hpp"
+#include "ui/view/recycling_grid.hpp"
 
 namespace view {
 

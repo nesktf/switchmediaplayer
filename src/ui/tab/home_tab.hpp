@@ -2,7 +2,6 @@
 
 #include "ui/view/auto_tab_frame.hpp"
 #include "ui/view/h_recycling.hpp"
-#include "ui/view/media_source.hpp"
 
 namespace tab {
 class Home : public view::AttachedView {

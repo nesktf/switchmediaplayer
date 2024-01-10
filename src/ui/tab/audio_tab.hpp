@@ -1,8 +1,7 @@
 #pragma once
 
-#include "ui/view/auto_tab_frame.hpp"
 #include "ui/view/h_recycling.hpp"
-#include "ui/view/media_source.hpp"
+#include "ui/view/auto_tab_frame.hpp"
 
 namespace tab {
 class Audio : public view::AttachedView {

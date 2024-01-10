@@ -1,5 +1,8 @@
 #include "ui/tab/video_tab.hpp"
 
+#include "ui/view/media_source.hpp"
+#include "ui/view/media_cell.hpp"
+
 namespace tab {
 
 view::MediaCellSource* getVideoContent(void) {

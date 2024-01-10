@@ -8,7 +8,7 @@
     backgroundColor="@theme/color/grey_1"
     scalingType="fill"
     width="100%"
-    height="auto"
+    height="80%"
     cornerRadius="0"/>
 
   <brls:Box
@@ -22,26 +22,25 @@
     height="100%"
     alignItems="center"/>
 
-    <brls:Box
-      axis="column"
-      height="20%"
-      alignItems="center"
-      backgroundColor="#353535">
+  <brls:Box
+    axis="column"
+    height="20%"
+    alignItems="center"
+    backgroundColor="#353535">
 
-      <brls:Label
-        id="view/media_cell/title"
-        wireframe="false"
-        fontSize="15"
-        marginTop="5"
-        text="title"/>
-      <brls:Label
-        id="view/media_cell/subtitle"
-        wireframe="false"
-        fontSize="12"
-        marginTop="5"
-        text="subtitle"/>
+    <brls:Label
+      id="view/media_cell/title"
+      wireframe="false"
+      fontSize="15"
+      marginTop="5"
+      text="title"/>
+    <brls:Label
+      id="view/media_cell/subtitle"
+      wireframe="false"
+      fontSize="12"
+      marginTop="5"
+      text="subtitle"/>
 
-    </brls:Box>
-
+  </brls:Box>
 
 </brls:Box>

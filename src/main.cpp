@@ -1,15 +1,16 @@
 #include <borealis.hpp>
-#include <cstdlib>
 
 #include "ui/activity/main_activity.hpp"
+
 #include "ui/view/auto_tab_frame.hpp"
 #include "ui/view/svg_image.hpp"
 #include "ui/view/recycling_grid.hpp"
 #include "ui/view/h_recycling.hpp"
-#include "ui/tab/settings_tab.hpp"
+
 #include "ui/tab/home_tab.hpp"
-#include "ui/tab/video_tab.hpp"
 #include "ui/tab/audio_tab.hpp"
+#include "ui/tab/video_tab.hpp"
+#include "ui/tab/settings_tab.hpp"
 
 int main(int argc, char* argv[]) {
   // Init borealis
@@ -30,9 +31,9 @@ int main(int argc, char* argv[]) {
 
   // Tabs
   brls::Application::registerXMLView("HomeTab", tab::Home::create);
+  brls::Application::registerXMLView("AudioTab", tab::Audio::create);
   brls::Application::registerXMLView("VideoTab", tab::Video::create);
   brls::Application::registerXMLView("SettingsTab", tab::Settings::create);
-  brls::Application::registerXMLView("AudioTab", tab::Audio::create);
 
   // Theme things
   brls::Theme::getLightTheme().addColor("color/grey_1", nvgRGB(245, 246, 247));

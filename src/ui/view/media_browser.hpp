@@ -3,10 +3,10 @@
 #include <filesystem>
 
 #include <borealis.hpp>
-#include "ui/view/recycling_grid.hpp"
-#include "ui/view/media_cell.hpp"
 
-namespace activity {
+#include "ui/view/recycling_grid.hpp"
+
+namespace view {
 
 class BrowserActivity;
 
@@ -36,10 +36,10 @@ public:
   std::vector<BrowserCellData> data;
 };
 
-class BrowserActivity : public brls::Activity {
+class BrowserActivity : public brls::Box {
 public:
-  CONTENT_FROM_XML_RES("activity/media_browser.xml");
-  void onContentAvailable() override;
+  BrowserActivity();
+  void init();
   void modifyPath(const std::string& path);
   BRLS_BIND(view::RecyclingGrid, content_frame, "frame/content");
 protected:

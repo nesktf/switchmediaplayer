@@ -1,0 +1,40 @@
+<brls:Box
+  width="100%"
+  height="100%"
+  axis="column"
+  justifyContent="spaceBetween"
+  alignItems="center">
+
+  <brls:Box
+    axis="column"
+    width="100%"
+    height="auto">
+
+    <brls:Box
+      width="auto"
+      height="auto"
+      padding="20px">
+
+      <brls:Label
+        id="view/browser/path_label"
+        fontSize="15"
+        text="path_label"/>
+
+    </brls:Box>
+
+    <brls:Box
+      width="100%"
+      height="90%">
+      <RecyclerFrame
+        id="frame/content"
+        grow="1"
+        spanCount="5"
+        padding="30px"
+        width="auto"
+        itemHeight="200px"
+        itemSpace="10"/>
+    </brls:Box>
+
+  </brls:Box>
+
+</brls:Box>
