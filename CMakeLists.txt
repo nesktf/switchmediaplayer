@@ -11,10 +11,19 @@ include(${BOREALIS_LIBRARY}/cmake/toolchain.cmake)
 project(switchmp)
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "0")
-set(VERSION_REVISION "1")
+set(VERSION_REVISION "2")
 set(PROJECT_AUTHOR "nesktf")
 set(PROJECT_ICON ${PROJECT_RESOURCES}/img/icon.jpg)
-set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}")
+execute_process(COMMAND git rev-parse --short HEAD
+  OUTPUT_VARIABLE GIT_TAG_SHORT
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(COMMAND git rev-list --count HEAD
+  OUTPUT_VARIABLE VERSION_BUILD
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REVISION}-${VERSION_BUILD}-${GIT_TAG_SHORT}")
+message(STATUS "Build Version: ${APP_VERSION}")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # Add src files for switch build
@@ -57,6 +66,6 @@ add_custom_target(${PROJECT_NAME}.nro
 
 # Include things
 target_include_directories(${PROJECT_NAME} PRIVATE src ${APP_PLATFORM_INCLUDE})
-target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sections -Wunused-variable ${APP_PLATFORM_OPTION})
+target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sections -Wunused-variable -DAPP_VERSION ${APP_PLATFORM_OPTION})
 target_link_libraries(${PROJECT_NAME} PRIVATE borealis lunasvg ${APP_PLATFORM_LIB})
 target_link_options(${PROJECT_NAME} PRIVATE ${APP_PLATFORM_LINK_OPTION})
