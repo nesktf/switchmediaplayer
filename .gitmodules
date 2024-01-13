@@ -4,3 +4,6 @@
 [submodule "lib/lunasvg"]
 	path = lib/lunasvg
 	url = https://github.com/sammycage/lunasvg.git
+[submodule "lib/taglib"]
+	path = lib/taglib
+	url = https://github.com/taglib/taglib.git
