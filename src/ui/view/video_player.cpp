@@ -9,7 +9,7 @@ VideoPlayer::VideoPlayer(const std::string& file_path) {
   setHideHighlightBackground(true);
   setHideClickAnimation(true);
 
-  auto& mpv = MPV::instance();
+  auto& mpv = core::MPV::instance();
   // mpv.stop();
 
   float w = brls::Application::contentWidth;
@@ -27,7 +27,7 @@ VideoPlayer::VideoPlayer(const std::string& file_path) {
     "hints/back"_i18n, brls::BUTTON_B,
     [this](brls::View* view) {
       return brls::Application::popActivity(brls::TransitionAnimation::NONE, []() {
-        auto mpvce = MPV::instance().getCustomEvent();
+        auto mpvce = core::MPV::instance().getCustomEvent();
         mpvce->fire("VIDEO_CLOSE", nullptr);
       });
     },
@@ -39,22 +39,22 @@ VideoPlayer::VideoPlayer(const std::string& file_path) {
 }
 
 void VideoPlayer::draw(NVGcontext* vg, float x, float y, float w, float h, brls::Style style, brls::FrameContext* ctx) {
-  auto& mpv = MPV::instance();
+  auto& mpv = core::MPV::instance();
   if (!mpv.isValid()) return;
   mpv.draw(getFrame(), getAlpha());
 }
 
 void VideoPlayer::registerMPVEvent() {
-  auto& mpv = MPV::instance();
-  event_sub_id = mpv.getEvent()->subscribe([this](MpvEvent event) {
-    auto& mpv = MPV::instance();
+  auto& mpv = core::MPV::instance();
+  event_sub_id = mpv.getEvent()->subscribe([this](core::MpvEvent event) {
+    auto& mpv = core::MPV::instance();
     brls::Logger::debug("MPV event!!");
 
   });
 }
 
 VideoPlayer::~VideoPlayer() {
-  auto& mpv = MPV::instance();
+  auto& mpv = core::MPV::instance();
   mpv.getEvent()->unsubscribe(event_sub_id);
   mpv.stop();
 }

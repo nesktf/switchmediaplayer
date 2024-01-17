@@ -3,6 +3,8 @@
 #include "ui/view/media_source.hpp"
 #include "ui/view/media_cell.hpp"
 
+#include "core/database.hpp"
+
 namespace tab {
 
 view::MediaCellSource* getAudioContent(void) {
@@ -30,16 +32,17 @@ view::MediaCellSource* getAudioCategories(void) {
 }
 
 view::MediaCellSource* getRecentAlbums(void) {
+  auto& db = core::MediaDB::instance();
   view::MediaCellSource* source = new view::MediaCellSource();
-  source->data = {
-    {
-      .title = "TOHO BOSSA NOVA 8",
-      .subtitle = "ShibayanRecords",
-      .image_path = "img/cover_test0.jpg"
-    }
-  };
-  for (auto& item : source->data)
-    item.type = view::MediaCellType::ALBUM_CELL;
+
+  for (auto& item : db.getTenAlbums()) {
+    source->data.push_back((view::MediaCellData) {
+      .title = item.title,
+      .subtitle = "",
+      .image_path = "img/cover_test0.jpg",
+      .type = view::MediaCellType::ALBUM_CELL
+    });
+  }
   return source;
 }
 

@@ -10,6 +10,7 @@
 #include <mpv/client.h>
 #include <mpv/render_gl.h>
 
+namespace core {
 enum MpvEvent {
   MPV_LOADED,
   MPV_START_FILE,
@@ -102,3 +103,4 @@ private:
   static void on_wakeup(void* self);
   static void on_update(void* self);
 };
+}

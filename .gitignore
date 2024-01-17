@@ -3,3 +3,4 @@ build*
 SwitchMediaPlayer.kdev4
 .cache/
 resources
+switchmp.db

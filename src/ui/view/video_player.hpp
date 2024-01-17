@@ -12,6 +12,6 @@ public:
   void draw(NVGcontext* vg, float x, float y, float w, float h, brls::Style style, brls::FrameContext* ctx) override;
   brls::View* getNextFocus(brls::FocusDirection direction, brls::View* currentView) override { return this; }
   void registerMPVEvent();
-  brls::Event<MpvEvent>::Subscription event_sub_id;
+  brls::Event<core::MpvEvent>::Subscription event_sub_id;
 };
 }

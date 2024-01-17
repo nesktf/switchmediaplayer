@@ -21,7 +21,7 @@ enum class BrowserCellType {
 
 struct BrowserCellData {
   std::string title;
-  std::string path;
+  std::string path; 
   BrowserCellType type;
   BrowserActivity* activity;
 };
@@ -41,8 +41,7 @@ public:
   BrowserActivity();
   void init();
   void modifyPath(const std::string& path);
-  BRLS_BIND(view::RecyclingGrid, content_frame, "frame/content");
-protected:
+  BRLS_BIND(view::RecyclingGrid, content_frame, "frame/content"); protected:
   BrowserActivity(const std::string& path);
   virtual BrowserSource* parseFolder() = 0;
   std::filesystem::path curr_path;

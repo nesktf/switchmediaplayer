@@ -2,7 +2,7 @@
 // Created by fang on 2022/8/12.
 //
 
-#include "mpv.hpp"
+#include "core/mpv.hpp"
 
 #include <glad/glad.h>
 #include <mpv/client.h>
@@ -10,6 +10,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+namespace core {
 static inline void check_error(int status) {
   if (status < 0) brls::Logger::error("MPV ERROR => {}", mpv_error_string(status));
 }
@@ -347,3 +348,4 @@ void MPV::eventMainLoop() {
   }
 }
 
+}

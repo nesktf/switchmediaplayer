@@ -1,46 +1,51 @@
 <brls:Box
-    width="auto"
-    height="auto">
+  width="auto"
+  height="auto">
 
-    <brls:ScrollingFrame
+  <brls:ScrollingFrame
+    width="auto"
+    height="auto"
+    marginTop="0"
+    grow="1.0">
+
+    <brls:Box
+      width="auto"
+      height="auto"
+      axis="column"
+      alignItems="stretch"
+      paddingLeft="@style/brls/tab_frame/content_padding_sides"
+      paddingRight="@style/brls/tab_frame/content_padding_sides"
+      paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
+      paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">
+
+      <brls:Header
         width="auto"
         height="auto"
-        marginTop="0"
-        grow="1.0">
+        title="@i18n/main/tab/settings/header"
+        marginBottom="10px" />
+      <brls:Box
+        width="100%"
+        height="auto"
+        axis="column"
+        marginBottom="30px">
+        <brls:BooleanCell
+          id="setting/bool"
+          title="amomi"/>
+        <brls:SelectorCell
+          id="setting/selector"
+          title="amomu"/>
+        <brls:InputCell
+          id="setting/path_input"/>
+        <brls:DetailCell
+          id="setting/path_button"
+          title="add media path" />
+        <brls:RadioCell
+          id="setting/scan_button"
+          title="scan things"/>
+      </brls:Box>
 
-        <brls:Box
-            width="auto"
-            height="auto"
-            axis="column"
-            alignItems="stretch"
-            paddingLeft="@style/brls/tab_frame/content_padding_sides"
-            paddingRight="@style/brls/tab_frame/content_padding_sides"
-            paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
-            paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">
+    </brls:Box>
 
-            <brls:Header
-                width="auto"
-                height="auto"
-                title="@i18n/main/tab/settings/header"
-                marginBottom="10px" />
-            <brls:Box
-                width="100%"
-                height="auto"
-                axis="column"
-                marginBottom="30px">
-                <brls:BooleanCell
-                    id="setting/bool"
-                    title="amomi"/>
-                <brls:SelectorCell
-                    id="setting/selector"
-                    title="amomu"/>
-                <brls:RadioCell
-                    id="setting/radio"
-                    title="amomo"/>
-            </brls:Box>
-
-        </brls:Box>
-
-    </brls:ScrollingFrame>
+  </brls:ScrollingFrame>
 
 </brls:Box>
