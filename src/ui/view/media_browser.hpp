@@ -40,10 +40,10 @@ class BrowserActivity : public brls::Box {
 public:
   BrowserActivity();
   void init();
-  void modifyPath(const std::string& path);
+  void modifyContents(const std::string& path);
   BRLS_BIND(view::RecyclingGrid, content_frame, "frame/content"); protected:
   BrowserActivity(const std::string& path);
-  virtual BrowserSource* parseFolder() = 0;
+  virtual BrowserSource* getSource() = 0;
   std::filesystem::path curr_path;
 protected:
   BRLS_BIND(brls::Label, path_label, "view/browser/path_label");
@@ -53,7 +53,13 @@ class FileBrowser : public BrowserActivity {
 public:
   FileBrowser(const std::string& path);
 protected:
-  BrowserSource* parseFolder() override;
+  BrowserSource* getSource() override;
 };
 
+class MusicBrowser : public BrowserActivity {
+public:
+  MusicBrowser();
+protected:
+  BrowserSource* getSource() override;
+};
 }

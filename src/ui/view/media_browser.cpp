@@ -3,6 +3,8 @@
 #include "ui/view/video_player.hpp"
 #include "ui/view/media_cell.hpp"
 
+#include "core/database.hpp"
+
 namespace view {
 
 bool fileIsHidden(const std::filesystem::path path) {
@@ -24,9 +26,9 @@ view::RecyclingGridItem* BrowserSource::cellForRow(view::RecyclingView* recycler
 void BrowserSource::onItemSelected(brls::View* recycler, size_t index) {
   auto& item = data[index];
   brls::Logger::debug("File: {}, index: {}", item.path, std::to_string(index));
-  if (item.type == BrowserCellType::FOLDER)
-    item.activity->modifyPath(item.path);
-  else if (item.type == BrowserCellType::FILE) {
+  if (item.type == BrowserCellType::FOLDER) {
+    item.activity->modifyContents(item.path);
+  } else if (item.type == BrowserCellType::FILE || item.type == BrowserCellType::AUDIO) {
     view::VideoPlayer* player = new view::VideoPlayer(item.path);
     brls::sync([player]() { brls::Application::giveFocus(player); });
   }
@@ -42,19 +44,13 @@ BrowserActivity::BrowserActivity() {
 }
 
 void BrowserActivity::init() {
-  this->content_frame->setDataSource(parseFolder());
+  this->content_frame->setDataSource(getSource());
   this->path_label->setText(curr_path);
-
-  this->registerAction("Root Folder", brls::BUTTON_X, [this](...) {
-    if (curr_path.string() != "/")
-      modifyPath(curr_path.parent_path());
-    return true;
-  });
 }
 
-void BrowserActivity::modifyPath(const std::string& path) {
+void BrowserActivity::modifyContents(const std::string& path) {
   curr_path = std::filesystem::path { path };
-  this->content_frame->setDataSource(parseFolder());
+  this->content_frame->setDataSource(getSource());
   this->path_label->setText(curr_path);
   // Focus first cell (maybe find a better way?)
   brls::sync([this]() {brls::Application::giveFocus(content_frame);});
@@ -66,9 +62,14 @@ BrowserActivity::BrowserActivity(const std::string& path) : BrowserActivity() {
 
 FileBrowser::FileBrowser(const std::string& path) : BrowserActivity(path) {
   this->init();
+  this->registerAction("Root Folder", brls::BUTTON_X, [this](...) {
+    if (curr_path.string() != "/")
+      modifyContents(curr_path.parent_path());
+    return true;
+  });
 }
 
-BrowserSource* FileBrowser::parseFolder() {
+BrowserSource* FileBrowser::getSource() {
   BrowserSource* source = new BrowserSource();
   if (curr_path.string() != "/")
     source->data = {
@@ -106,6 +107,25 @@ BrowserSource* FileBrowser::parseFolder() {
     });
   }
 
+  return source;
+}
+
+MusicBrowser::MusicBrowser() : BrowserActivity("Music") {
+  this->init();
+}
+
+BrowserSource* MusicBrowser::getSource() {
+  BrowserSource* source = new BrowserSource();
+  auto& db = core::MediaDB::instance();
+
+  for (auto item : db.getAlbumContents("TOHO BOSSA NOVA 8")) {
+    source->data.push_back((BrowserCellData) {
+      .title = item.title,
+      .path = item.path,
+      .type = BrowserCellType::AUDIO,
+      .activity = this
+    });
+  }
   return source;
 }
 

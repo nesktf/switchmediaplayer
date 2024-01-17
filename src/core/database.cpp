@@ -61,9 +61,26 @@ private:
 };
 
 MediaDB::MediaDB() {
-  if (sqlite3_open(db_path.c_str(), &db) != SQLITE_OK) {
-    brls::fatal("Error opening sqlite db");
+  int rc;
+  char* err_msg;
+#if defined(__SWITCH__)
+  rc = sqlite3_open_v2(db_path.c_str(), &db, SQLITE_OPEN_READWRITE, "unix-none");
+#else
+  rc = sqlite3_open_v2(db_path.c_str(), &db, SQLITE_OPEN_READWRITE, nullptr);
+#endif
+  if (rc != SQLITE_OK) {
+    brls::Logger::debug("Error opening db: {}", rc);
+    brls::fatal("");
   }
+
+#if defined(__SWITCH__)
+  rc = sqlite3_exec(db, "PRAGMA journal_mode=MEMORY;", nullptr, 0, &err_msg);
+  if (rc != SQLITE_OK) {
+    brls::Logger::debug(":( {}, {}", err_msg, rc);
+    brls::fatal("");
+  }
+
+#endif
 
   std::string init_query = R"(
     CREATE TABLE IF NOT EXISTS [MediaSource] (
@@ -114,9 +131,8 @@ MediaDB::MediaDB() {
     );
   )";
 
-  char* err_msg;
-  if (sqlite3_exec(db, init_query.c_str(), nullptr, 0, &err_msg) != SQLITE_OK) {
-    brls::Logger::error("Failed to exec db init query: {}", err_msg);
+  if ((rc = sqlite3_exec(db, init_query.c_str(), nullptr, 0, &err_msg)) != SQLITE_OK) {
+    brls::Logger::error("Failed to exec db init query: {}, {}", err_msg, rc);
     sqlite3_free(err_msg);
     brls::fatal("");
   } else {

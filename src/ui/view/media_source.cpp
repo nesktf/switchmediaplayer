@@ -24,8 +24,14 @@ void MediaCellSource::onItemSelected(brls::View* recycler, size_t index) {
     recycler->present(player);
   }
   else if (item.type == MediaCellType::BROWSER_CELL) {
-    FileBrowser* browser = new FileBrowser("/");
-    recycler->present(browser);
+    if (item.title == "Songs") {
+      MusicBrowser* browser = new MusicBrowser();
+      recycler->present(browser);
+    }
+    else {
+      FileBrowser* browser = new FileBrowser("/");
+      recycler->present(browser);
+    }
   }
   else if (item.type == MediaCellType::ALBUM_CELL) {
     AlbumBrowser* browser = new AlbumBrowser();
