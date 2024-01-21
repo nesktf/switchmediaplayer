@@ -33,10 +33,23 @@ public:
   }
 };
 
+class AudioContentSource : public view::MediaListSource {
+public:
+  AudioContentSource() {
+    auto& db = core::Database::instance();
+    for (auto& source : db.getSources()) {
+      data.push_back({.title = source.path});
+    }
+  }
+  void onItemSelected(brls::View* recycler, size_t index) override {
+
+  }
+};
+
 Audio::Audio() {
   this->inflateFromXMLRes("xml/tab/audio.xml");
   this->content_frame->registerCell("cell", view::MediaCell::create);
-  // this->content_frame->setDataSource(getAlbumCells());
+  this->content_frame->setDataSource(new AudioContentSource());
 
   this->categories_frame->registerCell("cell", view::MediaCell::create);
   this->categories_frame->setDataSource(new AudioCategorySource());
@@ -52,7 +65,7 @@ Audio::Audio() {
 
   // brls::async([this]() {
   AlbumListSource* source = new AlbumListSource();
-  this->content_frame->setDataSource(source);
+  this->recent_frame->setDataSource(source);
   // });
 }
 

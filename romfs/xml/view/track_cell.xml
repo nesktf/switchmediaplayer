@@ -1,0 +1,34 @@
+<brls:Box
+  highlightCornerRadius="8"
+  alignItems="center"
+  lineBottom="1"
+  lineColor="@theme/brls/header/border">
+
+  <brls:Label
+    id="index_label"
+    width="30"
+    fontSize="15" />
+
+  <brls:Box
+    grow="1.0">
+    <brls:Label
+      id="title_label"
+      fontSize="15" />
+    <brls:Padding />
+    <brls:Label
+      id="subtitle_label"
+      fontSize="15"
+      marginTop="5"
+      textColor="@theme/color/grayed_out" />
+  </brls:Box>
+
+  <brls:Box
+    axis="column"
+    marginLeft="20">
+    <brls:Label
+      id="length_label"
+      singleLine="true"
+      fontSize="15" />
+  </brls:Box>
+
+</brls:Box>
