@@ -24,6 +24,7 @@
         padding="20px">
 
         <brls:Image
+          id="album_browser/cover"
           image="@res/img/cover_test0.jpg"/>
 
         <brls:Box
@@ -34,16 +35,16 @@
           paddingLeft="20px">
           <brls:Label
             id="album_browser/title"
-            fontSize="15"
-            text="album_title"/>
+           fontSize="18" />
           <brls:Label
             id="album_browser/artists"
-            fontSize="12"
-            text="album_artists"/>
+           fontSize="15" />
           <brls:Label
-            id="album_browser/duration"
-            fontSize="12"
-            text="album_duration"/>
+            id="album_browser/length"
+            fontSize="15"/>
+          <brls:Label
+            id="album_browser/music_count"
+            fontSize="15" />
         </brls:Box>
 
       </brls:Box>
@@ -66,9 +67,17 @@
       height="auto"
       alignItems="center"
       paddingTop="20px">
-
-      <brls:Label
-        text="album_content"/>
+      
+      <brls:ScrollingFrame
+        width="90%"
+        height="70%"
+        grow="1.0">
+        <brls:Box
+          id="album_browser/content_frame"
+          width="auto"
+          height="auto"
+          axis="column" />
+      </brls:ScrollingFrame>
 
     </brls:Box>
 

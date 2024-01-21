@@ -11,7 +11,21 @@ using namespace util;
 
 #define DB_VERSION 1
 
-inline void leechFalse(bool& a, const bool b) { a = !(a&&b); }
+inline void leechFalse(bool& a, const bool b) { a = (a&&b); }
+
+inline std::string orderStr(const std::string& name, core::Database::SortOrder order, unsigned int limit) { 
+  std::string end = "ORDER BY ";
+  if (order == core::Database::SortOrder::Random) {
+    end += "RANDOM() ";
+  } else if (order == core::Database::SortOrder::Asc) {
+    end += fmt::format("{} ASC ", name);
+  } else if (order == core::Database::SortOrder::Desc) {
+    end += fmt::format("{} DESC ", name);
+  }
+  end += fmt::format("LIMIT {}", limit);
+
+  return end;
+}
 
 namespace core {
 Database::Database() {
@@ -80,11 +94,15 @@ bool Database::migrate(void) {
 
 bool Database::insertSource(const std::string& path) {
   bool ret = true;
+  if (path.empty()) {
+    brls::Logger::error("[Database] Can't insert source with empty path");
+    return false;
+  }
   {
     SQLite::ScopedRW s{db};
     db->transaction();
     leechFalse(ret, db->prepare("INSERT INTO Sources (Path) VALUES (?)"));
-    leechFalse(ret, db->bind(path.c_str()));
+    leechFalse(ret, db->bind(1, path));
     leechFalse(ret, db->exec());
 
     if (!ret) {
@@ -97,18 +115,46 @@ bool Database::insertSource(const std::string& path) {
   return ret;
 }
 
-bool Database::insertMusic(const mediadata::Music& data, const int source_id) {
+bool Database::insertMusic(const mediadata::Music& data) {
   bool ret = true;
   {
     SQLite::ScopedRW s{db};
     db->transaction();
-    leechFalse(ret, db->prepare("INSERT INTO Music (Path, Title, Date, Track, ArtistID, GenreID, AlbumID, SourceID) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"));
-    SQLite::Nullable<int> date {data.date, data.date > 0};
-    SQLite::Nullable<int> track {data.track, data.track > 0};
-    int artist_id = insertGetArtist(data.artist);
-    int genre_id = insertGetGenre(data.genre);
-    int album_id = insertGetAlbum(data.album);
-    leechFalse(ret, db->bind(data.path.c_str(), data.title.c_str(), date, track, artist_id, genre_id, album_id, source_id));
+
+    int artist_id, genre_id, album_id;
+    if (!data.artist.empty()) {
+      artist_id = insertGetArtist(data.artist);
+    } else {
+      artist_id = 0;
+    }
+    
+    if (!data.album.empty()) {
+      album_id = insertGetAlbum(data.album, data.cover_path);
+    } else {
+      album_id = 0;
+    }
+
+    if (!data.genre.empty()) {
+      genre_id = insertGetGenre(data.genre);
+    } else {
+      genre_id = 0;
+    }
+
+    SQLite::Nullable<int> date {data.date, data.date == 0};
+    SQLite::Nullable<int> artist {artist_id, artist_id == 0};
+    SQLite::Nullable<int> genre {genre_id, genre_id == 0};
+    SQLite::Nullable<int> album {album_id, album_id == 0};
+
+    leechFalse(ret, db->prepare("INSERT INTO Music (Path, Title, Length, Track, Date, ArtistID, GenreID, AlbumID, SourceID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"));
+    leechFalse(ret, db->bind(1, data.path));
+    leechFalse(ret, db->bind(2, data.title));
+    leechFalse(ret, db->bind(3, data.length));
+    leechFalse(ret, db->bind(4, data.track));
+    leechFalse(ret, db->bind(5, date));
+    leechFalse(ret, db->bind(6, artist));
+    leechFalse(ret, db->bind(7, genre));
+    leechFalse(ret, db->bind(8, album));
+    leechFalse(ret, db->bind(9, data.source_id));
     leechFalse(ret, db->exec());
 
     if (!ret) {
@@ -121,10 +167,12 @@ bool Database::insertMusic(const mediadata::Music& data, const int source_id) {
   return ret;
 }
 
-bool Database::insertAlbum(const std::string& title) {
+bool Database::insertAlbum(const std::string& title, const std::string& cover_path) {
   bool ret = true;
-  leechFalse(ret, db->prepare("INSERT INTO Albums (Title) VALUES (?);"));
-  leechFalse(ret, db->bind(title.c_str()));
+
+  leechFalse(ret, db->prepare("INSERT INTO Albums (Title, Cover) VALUES (?, ?);"));
+  leechFalse(ret, db->bind(1, title));
+  leechFalse(ret, db->bind(2, cover_path));
   leechFalse(ret, db->exec());
 
   if (!ret) {
@@ -136,7 +184,7 @@ bool Database::insertAlbum(const std::string& title) {
 bool Database::insertGenre(const std::string& name) {
   bool ret = true;
   leechFalse(ret, db->prepare("INSERT INTO Genres (Name) VALUES (?);"));
-  leechFalse(ret, db->bind(name.c_str()));
+  leechFalse(ret, db->bind(1, name));
   leechFalse(ret, db->exec());
 
   if (!ret) {
@@ -148,7 +196,7 @@ bool Database::insertGenre(const std::string& name) {
 bool Database::insertArtist(const std::string& name) {
   bool ret = true;
   leechFalse(ret, db->prepare("INSERT INTO Artists (Name) VALUES (?);"));
-  leechFalse(ret, db->bind(name.c_str()));
+  leechFalse(ret, db->bind(1, name));
   leechFalse(ret, db->exec());
 
   if (!ret) {
@@ -167,7 +215,7 @@ int Database::getVersion(void) {
 bool Database::getAlbumID(const std::string& title, int& out) {
   bool ret = true;
   leechFalse(ret, db->prepare("SELECT ID FROM Albums WHERE Title=?"));
-  leechFalse(ret, db->bind(title.c_str()));
+  leechFalse(ret, db->bind(1, title));
   leechFalse(ret, db->exec());
 
   if (!db->hasRow()) {
@@ -186,7 +234,7 @@ bool Database::getAlbumID(const std::string& title, int& out) {
 bool Database::getGenreID(const std::string& name, int& out) {
   bool ret = true;
   leechFalse(ret, db->prepare("SELECT ID FROM Genres WHERE Name=?"));
-  leechFalse(ret, db->bind(name.c_str()));
+  leechFalse(ret, db->bind(1, name));
   leechFalse(ret, db->exec());
 
   if (!db->hasRow()) {
@@ -205,7 +253,7 @@ bool Database::getGenreID(const std::string& name, int& out) {
 bool Database::getArtistID(const std::string& name, int& out) {
   bool ret = true;
   leechFalse(ret, db->prepare("SELECT ID FROM Artists WHERE Name=?"));
-  leechFalse(ret, db->bind(name.c_str()));
+  leechFalse(ret, db->bind(1, name));
   leechFalse(ret, db->exec());
 
   if (!db->hasRow()) {
@@ -221,10 +269,10 @@ bool Database::getArtistID(const std::string& name, int& out) {
   return ret;
 }
 
-bool Database::getMusicID(const std::string& title, int& out) {
+bool Database::getMusicID(const std::string& title, const std::string& album, int& out) {
   bool ret = true;
   leechFalse(ret, db->prepare("SELECT ID FROM Music WHERE Title=?"));
-  leechFalse(ret, db->bind(title.c_str()));
+  leechFalse(ret, db->bind(1, title));
   leechFalse(ret, db->exec());
   
   if (!db->hasRow()) {
@@ -243,7 +291,7 @@ bool Database::getMusicID(const std::string& title, int& out) {
 bool Database::getSourceID(const std::string& path, int& out) {
   bool ret = true;
   leechFalse(ret, db->prepare("SELECT ID FROM Sources WHERE Path=?"));
-  leechFalse(ret, db->bind(path.c_str()));
+  leechFalse(ret, db->bind(1, path));
   leechFalse(ret, db->exec());
 
   if (!db->hasRow()) {
@@ -259,10 +307,10 @@ bool Database::getSourceID(const std::string& path, int& out) {
   return ret;
 }
 
-int Database::insertGetAlbum(const std::string& title) {
+int Database::insertGetAlbum(const std::string& title, const std::string& cover_path) {
   int id = 0;
   if (!getAlbumID(title, id)) {
-    insertAlbum(title);
+    insertAlbum(title, cover_path);
     getAlbumID(title, id);
   }
   return id;
@@ -286,143 +334,135 @@ int Database::insertGetArtist(const std::string& name) {
   return id;
 }
 
+std::vector<mediadata::CellData> Database::getAlbumCells(SortOrder order, unsigned int limit) {
+  std::vector<mediadata::CellData> out;
 
-//
-//   if ((rc = sqlite3_exec(db, init_query.c_str(), nullptr, 0, &err_msg)) != SQLITE_OK) {
-//     brls::Logger::error("Failed to exec db init query: {}, {}", err_msg, rc);
-//     sqlite3_free(err_msg);
-//     brls::fatal("");
-//   } else {
-//     brls::Logger::debug("MediaDB inited successfully");
-//   }
-//
-// }
-//
-// MediaDB::~MediaDB() {
-//   sqlite3_close(db);
-// }
-//
-// void MediaDB::insertAlbum(const AlbumData& data) {
-//   std::string sql = R"(INSERT INTO Albums (Title, Artist) VALUES(?, ?);)";
-//
-//   sqlite3_stmt* stmt;
-//   sqlite3_prepare_v2(db, sql.c_str(), sql.size(), &stmt, nullptr);
-//
-//   sqlite3_bind_text(stmt, 1, data.title.c_str(), data.title.size(), SQLITE_TRANSIENT);
-//   nullable_bind(stmt, 2, data.artist);
-//
-//   sqlite3_step(stmt);
-//   sqlite3_finalize(stmt);
-// }
-//
-// bool MediaDB::isAlbumRegistered(const std::string& title) {
-//   bool out;
-//   Query query{db, R"(SELECT COUNT(1) FROM Albums WHERE Title=?;)"};
-//   query.bind(title);
-//   query.exec([&out](auto stmt, auto cols) {
-//     out = (Query::getInt(stmt, 0) > 0);
-//   });
-//   return out;
-// }
-//
-// unsigned int MediaDB::getAlbumID(const std::string& title) {
-//   unsigned int out;
-//   Query query{db, R"(SELECT ID FROM Albums WHERE Title=?;)"};
-//   query.bind(title);
-//   query.exec([&out](auto stmt, auto cols) {
-//     out = Query::getInt(stmt, 0);
-//   });
-//   return out;
-// }
-//
-// void MediaDB::insertMusic(const MusicData& data) {
-//   std::string sql = R"(INSERT INTO Music (Path, Title, Artist, Date, Genre, Track, AlbumID, MediaSourceID) VALUES (?,?,?,?,?,?,?,?);)";
-//   unsigned int album_id = 0;
-//   unsigned int media_source_id = getMediaSourceID(data.media_source_path);
-//   if (!data.album_name.empty())
-//     album_id = getAlbumID(data.album_name);
-//
-//   sqlite3_stmt* stmt;
-//   int rc = sqlite3_prepare_v2(db, sql.c_str(), sql.size(), &stmt, nullptr);
-//   if (rc != SQLITE_OK)
-//     brls::Logger::debug("Error preparing thing");
-//
-//   sqlite3_bind_text(stmt, 1, data.path.c_str(), data.path.size(), SQLITE_TRANSIENT);
-//   sqlite3_bind_text(stmt, 2, data.title.c_str(), data.title.size(), SQLITE_TRANSIENT);
-//   nullable_bind(stmt, 3, data.artist);
-//   nullable_bind(stmt, 4, data.date);
-//   nullable_bind(stmt, 5, data.genre);
-//   nullable_bind(stmt, 6, data.track);
-//   nullable_bind(stmt, 7, album_id);
-//   sqlite3_bind_int(stmt, 8, media_source_id);
-//
-//   sqlite3_step(stmt);
-//   sqlite3_finalize(stmt);
-// }
-//
-// bool MediaDB::isMusicRegistered(const std::string& path) {
-//   bool out;
-//   Query query{db, R"(SELECT COUNT(1) FROM Music WHERE Path=?;)"};
-//   query.bind(path);
-//   query.exec([&out](auto stmt, auto cols) {
-//     out = (Query::getInt(stmt, 0) > 0);
-//   });
-//   return out;
-// }
-//
-// std::vector<MusicData> MediaDB::getAlbumContents(const std::string& title) {
-//   std::vector<MusicData> out;
-//   Query query{db, R"(SELECT M.Path, M.Title, M.Artist, M.Date, M.Genre, M.Track FROM Music AS M INNER JOIN Albums AS A ON A.ID = M.AlbumID WHERE A.Title=? ORDER BY M.Track DESC;)"};
-//   query.bind(title);
-//   query.exec([&out](auto stmt, auto cols) {
-//     out.push_back((MusicData) {
-//       .path = Query::getString(stmt, 0),
-//       .title = Query::getString(stmt, 1),
-//       .artist = Query::getString(stmt, 2)
-//     });
-//   });
-//   return out;
-// }
-//
-// std::vector<std::string> MediaDB::getMediaPaths(void) {
-//   std::vector<std::string> out;
-//   Query query{db, R"(SELECT Path FROM MediaSource;)"};
-//   query.exec([&out](auto stmt, auto cols) {
-//     out.push_back(Query::getString(stmt, 0));
-//   });
-//   return out;
-// }
-//
-// void MediaDB::insertMediaPath(const std::string& path) {
-//   std::string sql = R"(INSERT INTO MediaSource (Path) VALUES(?);)";
-//
-//   sqlite3_stmt* stmt;
-//   sqlite3_prepare_v2(db, sql.c_str(), sql.size(), &stmt, nullptr);
-//
-//   sqlite3_bind_text(stmt, 1, path.c_str(), path.size(), SQLITE_TRANSIENT);
-//
-//   sqlite3_step(stmt);
-//   sqlite3_finalize(stmt);
-// }
-//
-// unsigned int MediaDB::getMediaSourceID(const std::string& path) {
-//   unsigned int out;
-//   Query query{db, R"(SELECT ID FROM MediaSource WHERE Path=?;)"};
-//   query.bind(path);
-//   query.exec([&out](auto stmt, auto cols) {
-//     out = Query::getInt(stmt, 0);
-//   });
-//   return out;
-// }
-//
-// std::vector<AlbumData> MediaDB::getTenAlbums(void) {
-//   std::vector<AlbumData> out;
-//   Query query{db, R"(SELECT Title FROM Albums ORDER BY ID DESC LIMIT 10;)"};
-//   query.exec([&out](auto stmt, auto cols) {
-//     out.push_back((AlbumData) {
-//       .title = Query::getString(stmt, 0)
-//     });
-//   });
-//   return out;
-// }
+  db->prepareExec("SELECT ID, Title, Artists, Cover FROM Albums;");
+  while (db->hasRow()) {
+    mediadata::CellData data;
+    db->getInt(0, data.data_id);
+    db->getString(1, data.title);
+    db->getString(2, data.subtitle);
+    db->getString(3, data.image_path);
+    out.push_back(data);
+    db->nextRow();
+  }
+
+  return out;
+}
+
+mediadata::Album Database::getAlbumData(unsigned int album_id) {
+  mediadata::Album out;
+  
+  db->prepare("SELECT ID, Title, Artists, Cover FROM Albums WHERE ID=?");
+  db->bind(1, album_id);
+  db->exec();
+
+  if (db->hasRow()) {
+    db->getInt(0, out.id);
+    db->getString(1, out.title);
+    db->getString(2, out.artist);
+    db->getString(3, out.cover_path);
+    db->nextRow();
+  }
+
+  db->prepare("SELECT ID, Length From Music WHERE AlbumID=? ORDER BY Track ASC");
+  db->bind(1, album_id);
+  db->exec();
+
+  out.length = 0;
+  while (db->hasRow()) {
+    int id, len;
+    db->getInt(0, id);
+    db->getInt(1, len);
+    out.music.push_back(id);
+    out.length += len;
+    db->nextRow();
+  }
+
+  return out;
+}
+
+std::vector<mediadata::CellData> Database::getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit) {
+  std::vector<mediadata::CellData> out;
+
+  db->prepare(R"(
+    SELECT Mu.ID, Mu.Title, Ar.Name, Al.Cover
+    FROM Music AS Mu
+    INNER JOIN Albums AS Al
+      ON Al.ID = Mu.AlbumID
+    INNER JOIN Artists AS Ar
+      ON Ar.ID = Mu.ArtistID
+    WHERE Al.ID = ?
+    ORDER BY Track ASC;
+  )");
+  db->bind(1, album_id);
+  db->exec();
+
+  while (db->hasRow()) {
+    mediadata::CellData data;
+    db->getInt(0, data.data_id);
+    db->getString(1, data.title);
+    db->getString(2, data.subtitle);
+    db->getString(3, data.image_path);
+    out.push_back(data);
+    db->nextRow();
+  }
+
+  return out;
+}
+
+std::vector<mediadata::Source> Database::getSources(void) {
+  std::vector<mediadata::Source> out;
+
+  db->prepareExec("SELECT ID, Path FROM Sources;");
+  
+  while (db->hasRow()) {
+    mediadata::Source data;
+    db->getInt(0, data.id);
+    db->getString(1, data.path);
+    out.push_back(data);
+    db->nextRow();
+  }
+
+  return out;
+}
+
+std::vector<mediadata::Music> Database::getMusicData(unsigned int album_id, SortOrder order, unsigned int limit) {
+  std::vector<mediadata::Music> out;
+  db->prepare(R"(
+    SELECT Mu.ID, Mu.Path, Mu.Title, Mu.Length, Mu.Track, Mu.Date, Ar.Name, Ge.Name, Al.Title
+    FROM Music AS Mu
+    INNER JOIN Artists AS Ar
+      ON Ar.ID = Mu.ArtistID
+    INNER JOIN Genres AS Ge
+      ON Ge.ID = Mu.GenreID
+    INNER JOIN Albums AS Al
+      ON Al.ID = Mu.AlbumID
+    WHERE Al.ID = ?
+    ORDER BY Track ASC;
+  )");
+  db->bind(1, album_id);
+  db->exec();
+
+  brls::Logger::info("Doing thing");
+  while (db->hasRow()) {
+    mediadata::Music data;
+    db->getInt(0, data.id);
+    db->getString(1, data.path);
+    db->getString(2, data.title);
+    db->getInt(3, data.length);
+    db->getInt(4, data.track);
+    db->getInt(5, data.date);
+    db->getString(6, data.artist);
+    db->getString(7, data.genre);
+    db->getString(8, data.album);
+    out.push_back(data);
+    db->nextRow();
+  }
+
+  brls::Logger::info("Thing done");
+  return out;
+}
+
 }

@@ -2,32 +2,17 @@
 
 #include "ui/view/recycling_grid.hpp"
 
+#include "core/types.hpp"
+
 namespace view {
-
-enum class MediaCellType {
-  NONE,
-  AUDIO_FILE_CELL,
-  VIDEO_FILE_CELL,
-  ALBUM_CELL,
-  BROWSER_CELL
-};
-
-struct MediaCellData {
-  std::string title;
-  std::string subtitle;
-  std::string image_path; 
-  std::string path;
-  MediaCellType type;
-};
-
-class MediaCellSource : public RecyclingGridDataSource {
+class MediaListSource : public RecyclingGridDataSource {
 public:
-  MediaCellSource() {};
-  size_t getItemCount() override { return data.size(); };
+  MediaListSource() {};
+  size_t getItemCount() override;
   RecyclingGridItem* cellForRow(RecyclingView* recycler, size_t index) override;
-  void onItemSelected(brls::View* recycler, size_t index) override;
+  virtual void onItemSelected(brls::View* recycler, size_t index) override = 0;
   void clearData() override;
-  std::vector<MediaCellData> data;
+  std::vector<core::mediadata::CellData> data;
 };
 
 }

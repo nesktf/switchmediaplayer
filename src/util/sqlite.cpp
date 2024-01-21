@@ -34,7 +34,7 @@ SQLite::SQLite(const std::string& path) : path(path) {
   this->query_status = QueryStatus::None;
   this->err_msg = "";
   this->transaction_active = false;
-  this->bind_counter = 0;
+  // this->bind_counter = 0;
 }
 
 SQLite::~SQLite() { close(); }
@@ -53,7 +53,7 @@ void SQLite::setErrMsg(const std::string& str) {
 }
 
 bool SQLite::open(Connection type) {
-  if (connection_type == Connection::None || type == Connection::None)
+  if (connection_type != Connection::None || type == Connection::None)
     return true;
 
 #if defined(__SWITCH__)
@@ -132,7 +132,7 @@ bool SQLite::prepare(const std::string& query) {
   finalize();
 
   int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &this->query, nullptr);
-  if (rc == SQLITE_OK || this->query == nullptr) {
+  if (rc != SQLITE_OK || this->query == nullptr) {
     setErrMsg();
     return false;
   }
@@ -244,92 +244,156 @@ bool SQLite::rollback(void) {
   return ret;
 }
 
-template<typename... Args>
-bool SQLite::bind(int num, Args... data) {
+
+bool SQLite::bind(unsigned int i, const std::string& str) {
   if (query_status != QueryStatus::Ready) {
     setErrMsg("Can't bind an unprepared query");
     return false;
   }
-
-  int ret;
-  if (num < 0) {
-    sqlite3_bind_null(query, ++bind_counter);
-  } else {
-    ret = sqlite3_bind_int(query, ++bind_counter, num);
-  }
+  int ret = sqlite3_bind_text(query, i, str.c_str(), str.size(), SQLITE_TRANSIENT);
   if (ret != SQLITE_OK) {
     setErrMsg();
-    bind_counter = 0;
     return false;
   }
-
-  return bind(data...);
+  return true;
 }
 
-template<typename... Args>
-bool SQLite::bind(const char* str, Args... data) {
+bool SQLite::bind(unsigned int i, const Nullable<std::string>& str) {
   if (query_status != QueryStatus::Ready) {
     setErrMsg("Can't bind an unprepared query");
     return false;
   }
-
-  int ret = sqlite3_bind_text(query, ++bind_counter, str, strlen(str), SQLITE_TRANSIENT);
-  if (ret != SQLITE_OK) {
-    setErrMsg();
-    bind_counter = 0;
-    return false;
-  }
-
-  return bind(data...);
-}
-
-template<typename... Args>
-bool SQLite::bind(Nullable<int> num, Args... data) {
-  if (query_status != QueryStatus::Ready) {
-    setErrMsg("Can't bind an unprepared query");
-    return false;
-  }
-  
-  int ret;
-  if (num.null_cond) {
-    ret = sqlite3_bind_null(query, ++bind_counter);
-  } else {
-    ret = sqlite3_bind_int(query, ++bind_counter, num.data);
-  }
-  if (ret != SQLITE_OK) {
-    setErrMsg();
-    bind_counter = 0;
-    return false;
-  }
-
-  return bind(data...);
-}
-
-template<typename... Args>
-bool SQLite::bind(Nullable<const char*> str, Args... data) {
-  if (query_status != QueryStatus::Ready) {
-    setErrMsg("Can't bind an unprepared query");
-    return false;
-  }
-  
   int ret;
   if (str.null_cond) {
-    ret = sqlite3_bind_null(query, ++bind_counter);
+    ret = sqlite3_bind_null(query, i);
   } else {
-    ret = sqlite3_bind_text(query, ++bind_counter, str.data, strlen(str.data), SQLITE_TRANSIENT);
+    ret = sqlite3_bind_text(query, i, str.data.c_str(), str.data.size(), SQLITE_TRANSIENT);
   }
   if (ret != SQLITE_OK) {
     setErrMsg();
-    bind_counter = 0;
     return false;
   }
+  return true;
+}
 
-  return bind(data...);
+bool SQLite::bind(unsigned int i, const int num) {
+  if (query_status != QueryStatus::Ready) {
+    setErrMsg("Can't bind an unprepared query");
+    return false;
+  }
+  int ret = sqlite3_bind_int(query, i, num);
+  if (ret != SQLITE_OK) {
+    setErrMsg();
+    return false;
+  }
+  return true;
+}
+
+bool SQLite::bind(unsigned int i, const Nullable<int>& num) {
+  if (query_status != QueryStatus::Ready) {
+    setErrMsg("Can't bind an unprepared query");
+    return false;
+  }
+  int ret;
+  if (num.null_cond) {
+    ret = sqlite3_bind_null(query, i);
+  } else {
+    ret = sqlite3_bind_int(query, i, num.data);
+  }
+  if (ret != SQLITE_OK) {
+    setErrMsg();
+    return false;
+  }
+  return true;
 }
 
 
-// Last binding, should always return true
-bool SQLite::bind(void) { bind_counter = 0; return true; }
+// template<typename... Args>
+// bool SQLite::bind(int num, Args... data) {
+//   if (query_status != QueryStatus::Ready) {
+//     setErrMsg("Can't bind an unprepared query");
+//     return false;
+//   }
+//
+//   int ret;
+//   if (num < 0) {
+//     sqlite3_bind_null(query, ++bind_counter);
+//   } else {
+//     ret = sqlite3_bind_int(query, ++bind_counter, num);
+//   }
+//   if (ret != SQLITE_OK) {
+//     setErrMsg();
+//     bind_counter = 0;
+//     return false;
+//   }
+//
+//   return bind(data...);
+// }
+//
+// template<typename... Args>
+// bool SQLite::bind(const char* str, Args... data) {
+//   if (query_status != QueryStatus::Ready) {
+//     setErrMsg("Can't bind an unprepared query");
+//     return false;
+//   }
+//
+//   int ret = sqlite3_bind_text(query, ++bind_counter, str, strlen(str), SQLITE_TRANSIENT);
+//   if (ret != SQLITE_OK) {
+//     setErrMsg();
+//     bind_counter = 0;
+//     return false;
+//   }
+//
+//   return bind(data...);
+// }
+//
+// template<typename... Args>
+// bool SQLite::bind(Nullable<int> num, Args... data) {
+//   if (query_status != QueryStatus::Ready) {
+//     setErrMsg("Can't bind an unprepared query");
+//     return false;
+//   }
+//   
+//   int ret;
+//   if (num.null_cond) {
+//     ret = sqlite3_bind_null(query, ++bind_counter);
+//   } else {
+//     ret = sqlite3_bind_int(query, ++bind_counter, num.data);
+//   }
+//   if (ret != SQLITE_OK) {
+//     setErrMsg();
+//     bind_counter = 0;
+//     return false;
+//   }
+//
+//   return bind(data...);
+// }
+//
+// template<typename... Args>
+// bool SQLite::bind(Nullable<const char*> str, Args... data) {
+//   if (query_status != QueryStatus::Ready) {
+//     setErrMsg("Can't bind an unprepared query");
+//     return false;
+//   }
+//   
+//   int ret;
+//   if (str.null_cond) {
+//     ret = sqlite3_bind_null(query, ++bind_counter);
+//   } else {
+//     ret = sqlite3_bind_text(query, ++bind_counter, str.data, strlen(str.data), SQLITE_TRANSIENT);
+//   }
+//   if (ret != SQLITE_OK) {
+//     setErrMsg();
+//     bind_counter = 0;
+//     return false;
+//   }
+//
+//   return bind(data...);
+// }
+//
+//
+// // Last binding, should always return true
+// bool SQLite::bind(void) { bind_counter = 0; return true; }
 
 bool SQLite::getString(unsigned int i, std::string& out) {
   if (query_status != QueryStatus::Results) {
@@ -337,7 +401,12 @@ bool SQLite::getString(unsigned int i, std::string& out) {
     return false;
   }
 
-  out = reinterpret_cast<const char*>(sqlite3_column_text(query, i));
+  const unsigned char* tmp = sqlite3_column_text(query, i);
+  if (tmp != nullptr) {
+    out = reinterpret_cast<const char*>(sqlite3_column_text(query, i));
+  } else {
+    out = "";
+  }
   return true;
 }
 

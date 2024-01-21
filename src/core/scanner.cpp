@@ -1,51 +1,64 @@
-#include "media/scanner.hpp"
+#include "core/scanner.hpp"
 
-#include "core/database.hpp"
-#include "media/tag_reader.hpp"
+#include "core/db/database.hpp"
+#include <fileref.h>
+#include <opusfile.h>
+#include <oggfile.h>
 
 #include <filesystem>
 
-namespace media {
-void registerPath(const std::string& path) {
-  auto& db = core::MediaDB::instance();
-  db.insertMediaPath(path);
-}
+using namespace core;
 
-void scan(void) {
-  auto& db = core::MediaDB::instance();
+mediadata::Music parseOpusTags(const std::filesystem::path& path, const int source_id) {
+  TagLib::FileRef f {path.c_str()};
+  auto file = dynamic_cast<TagLib::Ogg::Opus::File*>(f.file());
+  auto tag = file->tag();
+  auto prop = file->audioProperties();
 
-  for (auto media_source_path : db.getMediaPaths()) {
-    brls::Logger::debug("Path: {}", media_source_path);
-    for (auto const& dir_entry : std::filesystem::recursive_directory_iterator{media_source_path}) {
-      if (dir_entry.is_directory())
-        continue;
-      std::string ext = dir_entry.path().extension();
+  mediadata::Music music;
+  music.path = path.string();
+  music.title = tag->title().to8Bit(true);
+  music.album = tag->album().to8Bit(true);
+  music.genre = tag->genre().to8Bit(true);
+  music.artist = tag->artist().to8Bit(true);
+  music.track = tag->track();
+  music.date = tag->year();
+  music.length = prop->lengthInSeconds();
+  music.source_id = source_id;
 
-      if (ext.find("ogg") != std::string::npos) {
-        brls::Logger::debug("Found ogg file");
-        auto music = media::parseOggTags(dir_entry.path(), media_source_path);
-        if (!db.isAlbumRegistered(music.album_name)) {
-          core::AlbumData album;
-          album.title = music.album_name;
-          db.insertAlbum(album);
-        }
-        db.insertMusic(music);
-      }
+  auto dir_path = path.parent_path();
+  for (auto const& dir_entry : std::filesystem::directory_iterator{dir_path}) {
+    if (dir_entry.is_directory())
+      continue;
 
-      if (ext.find("opus") != std::string::npos) {
-        brls::Logger::debug("Found opus file");
-        auto music = media::parseOpusTags(dir_entry.path(), media_source_path);
-        if (!db.isAlbumRegistered(music.album_name)) {
-          core::AlbumData album;
-          album.title = music.album_name;
-          db.insertAlbum(album);
-        }
-        db.insertMusic(music);
-      }
-      // if (std::find(supp_ext.begin(), supp_ext.end(), ext) != supp_ext.end()) {
-      //   brls::Logger::debug("FILE: {}", dir_entry.path().string());
-      // }
+    std::string name = dir_entry.path().filename().string();
+    if (name.find("cover.") != std::string::npos) {
+      music.cover_path = dir_entry.path();
     }
   }
+
+  return music;
+}
+
+namespace media {
+void scan(void) {
+  brls::Logger::info("Scanning");
+  auto& db = core::Database::instance();
+
+  for (auto& source : db.getSources()) {
+    brls::Logger::debug("Path: {}", source.path);
+    for (auto const& dir_entry : std::filesystem::recursive_directory_iterator{source.path}) {
+      if (dir_entry.is_directory())
+        continue;
+
+      std::string ext = dir_entry.path().extension();
+      if (ext.find("opus") != std::string::npos) {
+        brls::Logger::debug("Found opus file");
+        auto music = parseOpusTags(dir_entry.path(), source.id);
+        db.insertMusic(music);
+      }
+    }
+  }
+  brls::Logger::info("Scan ended");
 }
 }

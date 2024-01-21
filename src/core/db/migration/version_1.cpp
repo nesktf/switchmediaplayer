@@ -43,7 +43,9 @@ bool migrationV1(util::SQLite* db) {
   ret = db->prepareExec(R"(
     CREATE TABLE [Albums] (
       [ID] INTEGER NOT NULL PRIMARY KEY,
-      [Title] TEXT UNIQUE NOT NULL
+      [Title] TEXT UNIQUE NOT NULL,
+      [Artists] TEXT,
+      [Cover] TEXT
     );
   )");
   if (!ret) {
@@ -51,13 +53,15 @@ bool migrationV1(util::SQLite* db) {
     return false;
   }
 
+  // TODO Make genres point to music, instead of music pointing to genres
   ret = db->prepareExec(R"(
     CREATE TABLE [Music] (
       [ID] INTEGER NOT NULL PRIMARY KEY,
       [Path] TEXT NOT NULL,
       [Title] TEXT NOT NULL,
+      [Length] INTEGER NOT NULL,
+      [Track] INTEGER NOT NULL,
       [Date] INTEGER,
-      [Track] INTEGER,
       [ArtistID] INTEGER,
       [GenreID] INTEGER,
       [AlbumID] INTEGER,
@@ -97,7 +101,7 @@ bool migrationV1(util::SQLite* db) {
       WHERE Music.GenreID = OLD.GenreID
     )
     BEGIN
-      DELETE FROM Genres WHERE Genre.ID = OLD.GenreID;
+      DELETE FROM Genres WHERE Genres.ID = OLD.GenreID;
     END;
   )");
   if (!ret) {
@@ -137,6 +141,7 @@ bool migrationV1(util::SQLite* db) {
       [ID] INTEGER NOT NULL PRIMARY KEY,
       [Path] TEXT NOT NULL,
       [Title] TEXT NOT NULL,
+      [Length] INTEGER NOT NULL,
       [SourceID] INTEGER NOT NULL,
       FOREIGN KEY (SourceID) REFERENCES Sources(ID) ON DELETE CASCADE
     );

@@ -1,8 +1,8 @@
 #include "ui/tab/settings_tab.hpp"
 
-#include "media/scanner.hpp"
+#include "core/scanner.hpp"
 
-#include "core/database.hpp"
+#include "core/db/database.hpp"
 
 namespace tab {
 Settings::Settings() {
@@ -10,8 +10,8 @@ Settings::Settings() {
   path_input->init("Media Path", "", [](auto){}, "", "", 255);
   path_button->registerClickAction([this](...) {
     std::string input = path_input->getValue();
-    auto& db = core::MediaDB::instance();
-    db.insertMediaPath(input);
+    auto& db = core::Database::instance();
+    db.insertSource(input);
     brls::Logger::debug("Added media path: {}", input);
     return true;
   });

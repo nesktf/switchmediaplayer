@@ -46,14 +46,19 @@ public:
   bool rollback(void);
 
   // Bind starts index at 1
-  template<typename... Args>
-  bool bind(int num, Args... data);
-  template<typename... Args>
-  bool bind(const char* str, Args... data);
-  template<typename... Args>
-  bool bind(Nullable<int> num, Args... data);
-  template<typename... Args>
-  bool bind(Nullable<const char*> str, Args... data);
+  bool bind(unsigned int i, const std::string& str);
+  bool bind(unsigned int i, const Nullable<std::string>& str);
+  bool bind(unsigned int i, const int num);
+  bool bind(unsigned int i, const Nullable<int>& str);
+
+  // template<typename... Args>
+  // bool bind(int num, Args... data);
+  // template<typename... Args>
+  // bool bind(const char* str, Args... data);
+  // template<typename... Args>
+  // bool bind(Nullable<int> num, Args... data);
+  // template<typename... Args>
+  // bool bind(Nullable<const char*> str, Args... data);
 
   // Get starts index at 0
   bool getString(unsigned int i, std::string& out);
@@ -69,7 +74,7 @@ private:
 private:
   void setErrMsg(const std::string& str = "");
   void finalize(void);
-  bool bind(void);
+  // bool bind(void);
 private:
   sqlite3* db;
   sqlite3_stmt* query;
@@ -81,6 +86,6 @@ private:
   std::string path;
 
   bool transaction_active;
-  unsigned int bind_counter;
+  // unsigned int bind_counter;
 };
 }

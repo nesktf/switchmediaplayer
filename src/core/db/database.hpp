@@ -9,12 +9,6 @@
 namespace core {
 class Database : public brls::Singleton<Database> {
 public:
-  enum class SortBy {
-    Title,
-    Album,
-    Genre,
-    Artist
-  };
   enum class SortOrder {
     Asc,
     Desc,
@@ -24,32 +18,23 @@ public:
   Database();
   ~Database();
 
-  bool insertSource(const std::string& path);
-  bool insertMusic(const mediadata::Music& data);
+  std::vector<mediadata::CellData> getAlbumCells(SortOrder order, unsigned int limit = 0);
+  mediadata::Album getAlbumData(unsigned int album_id);
 
+  std::vector<mediadata::CellData> getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit = 0);
+  std::vector<mediadata::Music> getMusicData(unsigned int album_id, SortOrder order, unsigned int limit = 0);
+
+  // Sources
   std::vector<mediadata::Source> getSources(void);
-  mediadata::Source getSourceByID(const int source_id);
+  // mediadata::Source getSourceByID(const int source_id);
+  bool insertSource(const std::string& path);
+  // bool deleteSource(const int source_id);
 
-  std::vector<mediadata::Album> getAlbums(SortOrder order, int limit = 10);
-  mediadata::Album getAlbumByID(const int album_id);
-  std::vector<mediadata::Music> getAlbumMusic(const int album_id, SortBy sort, SortOrder order);
+  // Music
+  // mediadata::Music getMusicByID(const int music_id);
+  bool insertMusic(const mediadata::Music& data);
+  // bool updateMusic(const mediadata::Music& data, const int music_id);
 
-  std::vector<mediadata::Genre> getGenres(SortOrder order, int limit = 10);
-  mediadata::Genre getGenreByID(const int genre_id);
-  std::vector<mediadata::Music> getGenreMusic(const int genre_id, SortBy sort, SortOrder order);
-
-  std::vector<mediadata::Artist> getArtists(SortOrder order, int limit = 10);
-  mediadata::Artist getArtistByID(const int artist_id);
-  std::vector<mediadata::Music> getArtistMusic(const int artist_id, SortBy sort, SortOrder order);
-
-  std::vector<mediadata::Music> getAllMusic(SortBy sort, SortOrder order);
-
-  bool validateMusic(const mediadata::Music& data);
-
-  bool updateMusic(const mediadata::Music& data);
-  bool updateSource(const mediadata::Source& data);
-
-  bool removeSource(const int source_id);
 private:
   bool migrate(void);
   int getVersion(void);
@@ -66,7 +51,7 @@ private:
   bool getAlbumID(const std::string& title, int& out);
   bool getGenreID(const std::string& name, int& out);
   bool getArtistID(const std::string& name, int& out);
-  bool getMusicID(const std::string& title, int& out);
+  bool getMusicID(const std::string& title, const std::string& album, int& out);
 private:
   util::SQLite* db;
 };
