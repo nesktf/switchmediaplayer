@@ -12,7 +12,7 @@ include(${BOREALIS_LIBRARY}/cmake/toolchain.cmake)
 project(switchmp)
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "0")
-set(VERSION_REVISION "2")
+set(VERSION_REVISION "3")
 set(PROJECT_AUTHOR "nesktf")
 set(PROJECT_ICON ${PROJECT_RESOURCES}/img/icon.jpg)
 execute_process(COMMAND git rev-parse --short HEAD
