@@ -2,6 +2,9 @@
 
 #include "core/db/database.hpp"
 #include "ui/view/video_player.hpp"
+#include "ui/view/svg_button.hpp"
+
+#include "ui/view/music_player.hpp"
 
 namespace view {
 class TrackCell : public RecyclingGridItem {
@@ -41,8 +44,9 @@ public:
   }
   void onItemSelected(brls::View* recycler, size_t index) override {
     auto& item = data[index];
-    VideoPlayer* player = new VideoPlayer(item.path);
-    brls::sync([player]() { brls::Application::giveFocus(player); });
+    auto& player = MusicPlayer::instance();
+    player.setCurrent(item);
+    recycler->present(new MusicPlayerWrapper());
   }
   void clearData() override { data.clear(); };
   std::vector<core::mediadata::Music> data;
@@ -53,6 +57,13 @@ AlbumBrowser::AlbumBrowser(const int album_id) {
   inflateFromXMLRes("xml/view/album_browser.xml");
 
   this->content->registerCell("cell", TrackCell::create);
+
+  auto* play_album_but = new SVGButton();
+  auto* add_album_but = new SVGButton();
+  auto* add_album_next_but = new SVGButton();
+  this->button_container->addView(play_album_but);
+  this->button_container->addView(add_album_but);
+  this->button_container->addView(add_album_next_but);
 
   auto& db = core::Database::instance();
   this->album_data = db.getAlbumData(album_id);

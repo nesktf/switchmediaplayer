@@ -431,7 +431,7 @@ std::vector<mediadata::Source> Database::getSources(void) {
 std::vector<mediadata::Music> Database::getMusicData(unsigned int album_id, SortOrder order, unsigned int limit) {
   std::vector<mediadata::Music> out;
   db->prepare(R"(
-    SELECT Mu.ID, Mu.Path, Mu.Title, Mu.Length, Mu.Track, Mu.Date, Ar.Name, Ge.Name, Al.Title
+    SELECT Mu.ID, Mu.Path, Mu.Title, Mu.Length, Mu.Track, Mu.Date, Ar.Name, Ge.Name, Al.Title, Al.Cover
     FROM Music AS Mu
     INNER JOIN Artists AS Ar
       ON Ar.ID = Mu.ArtistID
@@ -457,6 +457,7 @@ std::vector<mediadata::Music> Database::getMusicData(unsigned int album_id, Sort
     db->getString(6, data.artist);
     db->getString(7, data.genre);
     db->getString(8, data.album);
+    db->getString(9, data.cover_path);
     out.push_back(data);
     db->nextRow();
   }

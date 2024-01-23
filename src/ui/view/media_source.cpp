@@ -1,8 +1,6 @@
 #include "ui/view/media_source.hpp"
 
 #include "ui/view/media_cell.hpp"
-#include "ui/view/audio_player.hpp"
-#include "ui/view/video_player.hpp"
 
 namespace view {
 RecyclingGridItem* MediaListSource::cellForRow(RecyclingView* recycler, size_t index) {

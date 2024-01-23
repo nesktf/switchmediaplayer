@@ -4,6 +4,10 @@
   axis="column"
   justifyContent="spaceBetween"
   alignItems="center">
+<!-- <brls:AppletFrame -->
+<!--     iconInterpolation="linear" -->
+<!--     headerHidden="true" -->
+<!--     footerHidden="false"> -->
 
   <brls:Box
     axis="column"
@@ -23,7 +27,7 @@
         justifyContent="center">
 
         <brls:Image
-          id="view/audio_player/cover_image"
+          id="music_player/cover"
           scalingType="fit"
           height="70%"
           image="@res/img/cover_test0.jpg"/>
@@ -36,12 +40,12 @@
           height="auto">
 
           <brls:Label
-            id="view/audio_player/name_label"
+            id="music_player/title"
             fontSize="18"
             text="current_song"/>
           
-          <brls:Label
-            id="view/audio_player/artist_label"
+         <brls:Label
+            id="music_player/artist"
             fontSize="15"
             text="current_artist"/>
 
@@ -63,17 +67,14 @@
     </brls:Box>
 
     <brls:Box
-      axis="column"
+      id="music_player/controls_container"
+      axis="row"
       width="auto"
       height="auto"
       alignItems="center"
-      justifyContent="center">
-
-      <brls:Label
-        text="player_controls" />      
-
-    </brls:Box>
+      justifyContent="center" />
 
   </brls:Box>
 
+<!-- </brls:AppletFrame> -->
 </brls:Box>

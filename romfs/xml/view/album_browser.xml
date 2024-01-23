@@ -35,10 +35,10 @@
           paddingLeft="20px">
           <brls:Label
             id="album_browser/title"
-           fontSize="18" />
+            fontSize="18" />
           <brls:Label
             id="album_browser/artists"
-           fontSize="15" />
+            fontSize="15" />
           <brls:Label
             id="album_browser/length"
             fontSize="15"/>
@@ -50,35 +50,29 @@
       </brls:Box>
 
       <brls:Box
+        id="album_browser/button_container"
         axis="row"
-        width="auto"
-        padding="20px">
-
-        <brls:Label
-          text="album_buttons"/>
-
-      </brls:Box>
+        width="auto" />
 
     </brls:Box>
 
-  <brls:Box
-    width="100%"
-    height="70%" >
+    <brls:Box
+      width="100%"
+      height="70%" >
 
-    <RecyclerFrame
-      id="album_browser/content"
-      grow="1"
-      wireframe="false"
-      paddingLeft="30"
-      paddingRight="30"
-      spanCount="1"
-      itemHeight="35"
-      itemSpace="5"
-      focusable="true" />
+      <RecyclerFrame
+        id="album_browser/content"
+        grow="1"
+        wireframe="false"
+        paddingLeft="30"
+        paddingRight="30"
+        spanCount="1"
+        itemHeight="50"
+        itemSpace="5"
+        focusable="true" />
+
+    </brls:Box>
 
   </brls:Box>
-
-  </brls:Box>
-
 
 </brls:Box>
