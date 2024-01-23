@@ -3,27 +3,23 @@
 using namespace brls::literals;
 
 namespace view {
-VideoPlayer::VideoPlayer(const std::string& file_path) {
-  inflateFromXMLRes("xml/view/video_player.xml");
-  setHideHighlightBorder(true);
-  setHideHighlightBackground(true);
-  setHideClickAnimation(true);
-
-  auto& mpv = core::MPV::instance();
-  // mpv.stop();
+VideoPlayer::VideoPlayer() {
+  this->inflateFromXMLRes("xml/view/video_player.xml");
+  this->setHideHighlightBorder(true);
+  this->setHideHighlightBackground(true);
+  this->setHideClickAnimation(true);
 
   float w = brls::Application::contentWidth;
   float h = brls::Application::contentHeight;
-  brls::Box* container = new brls::Box();
-  container->setDimensions(w, h);
-  setDimensions(w, h);
-  setWidthPercentage(100);
-  setHeightPercentage(100);
-  setId("video");
-  container->addView(this);
-  brls::Application::pushActivity(new brls::Activity(container), brls::TransitionAnimation::NONE);
+  this->container = new brls::Box();
+  this->container->setDimensions(w, h);
+  this->setDimensions(w, h);
+  this->setWidthPercentage(100);
+  this->setHeightPercentage(100);
+  this->setId("video");
+  this->container->addView(this);
 
-  registerAction(
+  this->registerAction(
     "hints/back"_i18n, brls::BUTTON_B,
     [this](brls::View* view) {
       return brls::Application::popActivity(brls::TransitionAnimation::NONE, []() {
@@ -33,9 +29,14 @@ VideoPlayer::VideoPlayer(const std::string& file_path) {
     },
     true);
 
-  registerMPVEvent();
+  this->registerMPVEvent();
+}
 
+void VideoPlayer::openFile(const std::string& file_path) {
+  auto& mpv = core::MPV::instance();
+  mpv.stop();
   mpv.setUrl(file_path);
+  brls::Application::pushActivity(new brls::Activity(container), brls::TransitionAnimation::NONE);
 }
 
 void VideoPlayer::draw(NVGcontext* vg, float x, float y, float w, float h, brls::Style style, brls::FrameContext* ctx) {
@@ -47,9 +48,8 @@ void VideoPlayer::draw(NVGcontext* vg, float x, float y, float w, float h, brls:
 void VideoPlayer::registerMPVEvent() {
   auto& mpv = core::MPV::instance();
   event_sub_id = mpv.getEvent()->subscribe([this](core::MpvEvent event) {
-    auto& mpv = core::MPV::instance();
-    brls::Logger::debug("MPV event!!");
-
+    // auto& mpv = core::MPV::instance();
+    // brls::Logger::debug("MPV event!!");
   });
 }
 

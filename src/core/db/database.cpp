@@ -333,13 +333,13 @@ int Database::insertGetArtist(const std::string& name) {
   return id;
 }
 
-std::vector<mediadata::ThumbCellData> Database::getAlbumCells(SortOrder order, unsigned int limit) {
-  std::vector<mediadata::ThumbCellData> out;
+std::vector<mediadata::ThumbCellData<int>> Database::getAlbumCells(SortOrder order, unsigned int limit) {
+  std::vector<mediadata::ThumbCellData<int>> out;
 
   db->prepareExec("SELECT ID, Title, Artists, Cover FROM Albums;");
   while (db->hasRow()) {
-    mediadata::ThumbCellData data;
-    db->getInt(0, data.data_id);
+    mediadata::ThumbCellData<int> data;
+    db->getInt(0, data.data);
     db->getString(1, data.title);
     db->getString(2, data.subtitle);
     db->getString(3, data.image_path);
@@ -382,8 +382,8 @@ mediadata::Album Database::getAlbumData(unsigned int album_id) {
   return out;
 }
 
-std::vector<mediadata::ThumbCellData> Database::getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit) {
-  std::vector<mediadata::ThumbCellData> out;
+std::vector<mediadata::ThumbCellData<int>> Database::getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit) {
+  std::vector<mediadata::ThumbCellData<int>> out;
 
   db->prepare(R"(
     SELECT Mu.ID, Mu.Title, Ar.Name, Al.Cover
@@ -399,8 +399,8 @@ std::vector<mediadata::ThumbCellData> Database::getMusicCells(unsigned int album
   db->exec();
 
   while (db->hasRow()) {
-    mediadata::ThumbCellData data;
-    db->getInt(0, data.data_id);
+    mediadata::ThumbCellData<int> data;
+    db->getInt(0, data.data);
     db->getString(1, data.title);
     db->getString(2, data.subtitle);
     db->getString(3, data.image_path);

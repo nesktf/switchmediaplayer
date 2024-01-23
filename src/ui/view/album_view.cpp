@@ -1,4 +1,4 @@
-#include "ui/view/album_browser.hpp"
+#include "ui/view/album_view.hpp"
 
 #include "ui/view/video_player.hpp"
 #include "ui/view/music_player.hpp"
@@ -8,9 +8,8 @@
 #include "core/db/database.hpp"
 
 namespace view {
-
-AlbumBrowser::AlbumBrowser(const int album_id) {
-  inflateFromXMLRes("xml/view/album_browser.xml");
+AlbumView::AlbumView(const int album_id) {
+  this->inflateFromXMLRes("xml/view/album_view.xml");
 
   this->content->registerCell("cell", TrackCell::create);
 
@@ -38,7 +37,5 @@ AlbumBrowser::AlbumBrowser(const int album_id) {
   if (!album_data.cover_path.empty()) {
     this->cover->setImageFromFile(album_data.cover_path);
   }
-
-
 }
 }

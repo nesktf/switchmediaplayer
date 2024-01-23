@@ -18,10 +18,10 @@ public:
   Database();
   ~Database();
 
-  std::vector<mediadata::ThumbCellData> getAlbumCells(SortOrder order, unsigned int limit = 0);
+  std::vector<mediadata::ThumbCellData<int>> getAlbumCells(SortOrder order, unsigned int limit = 0);
   mediadata::Album getAlbumData(unsigned int album_id);
 
-  std::vector<mediadata::ThumbCellData> getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit = 0);
+  std::vector<mediadata::ThumbCellData<int>> getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit = 0);
   std::vector<mediadata::Music> getMusicData(unsigned int album_id, SortOrder order, unsigned int limit = 0);
 
   // Sources

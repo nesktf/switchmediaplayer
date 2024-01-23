@@ -16,8 +16,9 @@ enum class Type {
   Image
 };
 // General 
+template<typename T>
 struct ThumbCellData {
-  int data_id;
+  T data;
   std::string title;
   std::string subtitle;
   std::string image_path;

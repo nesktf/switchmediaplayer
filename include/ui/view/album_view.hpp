@@ -5,9 +5,9 @@
 #include "core/types.hpp"
 
 namespace view {
-class AlbumBrowser : public brls::Box {
+class AlbumView : public brls::Box {
 public:
-  AlbumBrowser(const int album_id);
+  AlbumView(const int album_id);
 private:
   BRLS_BIND(brls::Image, cover, "album_browser/cover");
   BRLS_BIND(brls::Label, title, "album_browser/title");

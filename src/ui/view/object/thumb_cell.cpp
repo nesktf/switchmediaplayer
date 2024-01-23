@@ -13,7 +13,6 @@ const std::string thumbcell_xml_content = R"xml(
     width="100%"
     height="80%"
     cornerRadius="0"/>
-
   <brls:Box
     id="thumb_cell/shadow"
     positionBottom="0"
@@ -54,18 +53,5 @@ ThumbCell::ThumbCell() {
 }
 
 ThumbCell* ThumbCell::create() { return new ThumbCell(); }
-
-view::RecyclingGridItem* ThumbCellSource::cellForRow(view::RecyclingView* recycler, size_t index) {
-  ThumbCell* cell = dynamic_cast<ThumbCell*>(recycler->dequeueReusableCell("cell"));
-  auto& item = data[index];
-  cell->title->setText(item.title);
-  cell->subtitle->setText(item.subtitle);
-  if (!item.image_path.empty())
-    cell->image->setImageFromFile(item.image_path);
-  return cell;
 }
 
-size_t ThumbCellSource::getItemCount() { return data.size(); }
-
-void ThumbCellSource::clearData() { data.clear(); }
-}

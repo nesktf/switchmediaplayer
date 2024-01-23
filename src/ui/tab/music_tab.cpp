@@ -1,38 +1,38 @@
 #include "ui/tab/music_tab.hpp"
 
-#include "ui/view/album_browser.hpp"
+#include "ui/view/album_view.hpp"
 #include "ui/view/object/thumb_cell.hpp"
+#include "ui/view/file_browser.hpp"
 
 #include "core/db/database.hpp"
 
 namespace tab {
-class AudioCategorySource : public view::ThumbCellSource {
+class AudioCategorySource : public view::ThumbCellSource<int> {
 public:
   AudioCategorySource() {
     this->data = {
-      {.data_id = 0, .title = "Albums",},
-      {.data_id = 1, .title = "Genres"}, 
-      {.data_id = 2, .title = "Artists"},
-      {.data_id = 3, .title = "Songs"}
+      {.data = 0, .title = "Albums",},
+      {.data = 1, .title = "Genres"}, 
+      {.data = 2, .title = "Artists"},
+      {.data = 3, .title = "Songs"}
     };
   };
   void onItemSelected(brls::View* recycler, size_t index) override {
   }
 };
 
-class AlbumListSource : public view::ThumbCellSource {
+class AlbumListSource : public view::ThumbCellSource<int> {
 public:
   AlbumListSource() {
     auto& db = core::Database::instance();
     data = db.getAlbumCells(core::Database::SortOrder::Desc, 10);
   }
   void onItemSelected(brls::View* recycler, size_t index) override {
-    view::AlbumBrowser* browser = new view::AlbumBrowser(data[index].data_id);
-    recycler->present(browser);
+    recycler->present(new view::AlbumView(data[index].data));
   }
 };
 
-class AudioContentSource : public view::ThumbCellSource {
+class AudioContentSource : public view::ThumbCellSource<int> {
 public:
   AudioContentSource() {
     auto& db = core::Database::instance();
@@ -41,7 +41,8 @@ public:
     }
   }
   void onItemSelected(brls::View* recycler, size_t index) override {
-
+    auto& item = data[index];
+    recycler->present(new view::FileBrowser(item.title));
   }
 };
 
