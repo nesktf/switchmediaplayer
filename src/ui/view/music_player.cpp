@@ -1,8 +1,8 @@
 #include "ui/view/music_player.hpp"
 
-#include "core/mpv.hpp"
+#include "ui/view/object/svg_button.hpp"
 
-#include "ui/view/svg_button.hpp"
+#include "core/mpv.hpp"
 
 using namespace brls::literals;
 
@@ -44,7 +44,7 @@ void MusicPlayer::setCurrent(const core::mediadata::Music& music) {
   mpv.setUrl(music.path);
 }
 
-MusicPlayerWrapper::MusicPlayerWrapper() {
+MusicPlayerView::MusicPlayerView() {
   this->content = new brls::Box();
   auto& view = MusicPlayer::instance();
   content->addView(&view);
@@ -53,7 +53,7 @@ MusicPlayerWrapper::MusicPlayerWrapper() {
   brls::Logger::debug("Created Music Player wrapper");
 }
 
-MusicPlayerWrapper::~MusicPlayerWrapper() {
+MusicPlayerView::~MusicPlayerView() {
   auto& mpv = core::MPV::instance();
   mpv.stop();
   MusicPlayer::instance().setParent(nullptr);

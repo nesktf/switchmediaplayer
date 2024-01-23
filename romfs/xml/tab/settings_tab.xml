@@ -1,0 +1,58 @@
+<brls:Box
+  width="auto"
+  height="auto">
+
+  <brls:ScrollingFrame
+    width="auto"
+    height="auto"
+    marginTop="0"
+    grow="1.0">
+
+    <brls:Box
+      width="auto"
+      height="auto"
+      axis="column"
+      alignItems="stretch"
+      paddingLeft="@style/brls/tab_frame/content_padding_sides"
+      paddingRight="@style/brls/tab_frame/content_padding_sides"
+      paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
+      paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">
+
+      <brls:Header
+        width="auto"
+        height="auto"
+        title="@i18n/main/settings_tab/header"
+        marginBottom="10px" />
+
+      <brls:Box
+        width="100%"
+        height="auto"
+        axis="column"
+        marginBottom="30px">
+
+        <brls:BooleanCell
+          id="settings_tab/bool"
+          title="amomi"/>
+
+        <brls:SelectorCell
+          id="settings_tabj/selector"
+          title="amomu"/>
+
+        <brls:InputCell
+          id="settings_tab/path_input"/>
+
+        <brls:DetailCell
+          id="settings_tab/path_button"
+          title="add media path" />
+
+        <brls:RadioCell
+          id="settings_tab/scan_button"
+          title="scan things"/>
+
+      </brls:Box>
+
+    </brls:Box>
+
+  </brls:ScrollingFrame>
+
+</brls:Box>

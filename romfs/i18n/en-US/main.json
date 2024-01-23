@@ -1,28 +1,25 @@
 {
-    "title": "switchmp",
-    "common": {
-        "explore": "Explore"
-    },
-    "tab": {
-        "home": {
-            "playing_header": "Now Playing",
-            "history_header": "History",
-            "playing_hint": "No audio playing",
-            "history_hint": "No items in history"
-        },
-        "audio": {
-            "content_header": "Audio sources",
-            "categories_header": "Categories",
-            "recent_header": "Recently added albums",
-            "random_albums_header": "Random albums",
-            "random_artists_header": "Random artists"
-        },
-        "video": {
-            "content_header": "Video sources",
-            "recent_header": "Recently added videos"
-        },
-        "settings": {
-            "header": "Settings"
-        }
-    }
+  "title": "switchmp",
+  "home_tab": {
+    "playing_header": "Now Playing",
+    "history_header": "History",
+    "playing_hint": "No audio playing",
+    "history_hint": "No items in history"
+  },
+  "music_tab": {
+    "content_header": "Audio sources",
+    "categories_header": "Categories",
+    "recent_header": "Recently added albums",
+    "random_albums_header": "Random albums",
+    "random_artists_header": "Random artists"
+  },
+  "video_tab": {
+    "content_header": "Video sources",
+    "recent_header": "Recently added videos"
+  },
+  "browser_tab": {
+  },
+  "settings_tab": {
+      "header": "Settings"
+  }
 }

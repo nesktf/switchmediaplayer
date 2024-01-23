@@ -79,7 +79,7 @@ add_custom_target(${PROJECT_NAME}.nro
 )
 
 # Include things
-target_include_directories(${PROJECT_NAME} PRIVATE src ${APP_PLATFORM_INCLUDE})
+target_include_directories(${PROJECT_NAME} PRIVATE include ${APP_PLATFORM_INCLUDE})
 target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sections -Wunused-variable -DAPP_VERSION ${APP_PLATFORM_OPTION})
 target_link_libraries(${PROJECT_NAME} PRIVATE borealis lunasvg tag ${APP_PLATFORM_LIB})
 target_link_options(${PROJECT_NAME} PRIVATE ${APP_PLATFORM_LINK_OPTION})

@@ -1,11 +1,10 @@
 #include "core/db/database.hpp"
 
+#include "core/db/migration/migration.hpp"
 #include "core/path.hpp"
 #include "core/types.hpp"
 
 #include "util/fs.hpp"
-
-#include "core/db/migration/migration.hpp"
 
 using namespace util;
 
@@ -334,12 +333,12 @@ int Database::insertGetArtist(const std::string& name) {
   return id;
 }
 
-std::vector<mediadata::CellData> Database::getAlbumCells(SortOrder order, unsigned int limit) {
-  std::vector<mediadata::CellData> out;
+std::vector<mediadata::ThumbCellData> Database::getAlbumCells(SortOrder order, unsigned int limit) {
+  std::vector<mediadata::ThumbCellData> out;
 
   db->prepareExec("SELECT ID, Title, Artists, Cover FROM Albums;");
   while (db->hasRow()) {
-    mediadata::CellData data;
+    mediadata::ThumbCellData data;
     db->getInt(0, data.data_id);
     db->getString(1, data.title);
     db->getString(2, data.subtitle);
@@ -383,8 +382,8 @@ mediadata::Album Database::getAlbumData(unsigned int album_id) {
   return out;
 }
 
-std::vector<mediadata::CellData> Database::getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit) {
-  std::vector<mediadata::CellData> out;
+std::vector<mediadata::ThumbCellData> Database::getMusicCells(unsigned int album_id, SortOrder order, unsigned int limit) {
+  std::vector<mediadata::ThumbCellData> out;
 
   db->prepare(R"(
     SELECT Mu.ID, Mu.Title, Ar.Name, Al.Cover
@@ -400,7 +399,7 @@ std::vector<mediadata::CellData> Database::getMusicCells(unsigned int album_id, 
   db->exec();
 
   while (db->hasRow()) {
-    mediadata::CellData data;
+    mediadata::ThumbCellData data;
     db->getInt(0, data.data_id);
     db->getString(1, data.title);
     db->getString(2, data.subtitle);

@@ -4,10 +4,6 @@
   axis="column"
   justifyContent="spaceBetween"
   alignItems="center">
-<!-- <brls:AppletFrame -->
-<!--     iconInterpolation="linear" -->
-<!--     headerHidden="true" -->
-<!--     footerHidden="false"> -->
 
   <brls:Box
     axis="column"
@@ -76,5 +72,4 @@
 
   </brls:Box>
 
-<!-- </brls:AppletFrame> -->
 </brls:Box>

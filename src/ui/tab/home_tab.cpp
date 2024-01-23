@@ -1,7 +1,6 @@
 #include "ui/tab/home_tab.hpp"
 
-#include "ui/view/media_source.hpp"
-#include "ui/view/media_cell.hpp"
+#include "ui/view/object/thumb_cell.hpp"
 
 namespace tab {
 //
@@ -36,23 +35,23 @@ namespace tab {
 // }
 //
 
-Home::Home() {
-  this->inflateFromXMLRes("xml/tab/home.xml");
+HomeTab::HomeTab() {
+  this->inflateFromXMLRes("xml/tab/home_tab.xml");
 
-  this->playing_frame->registerCell("cell", view::MediaCell::create);
+  this->playing_frame->registerCell("cell", view::ThumbCell::create);
   // this->playing_frame->setDataSource(getNowPlaying());
   this->playing_frame->setVisibility(brls::Visibility::GONE);
   brls::Logger::debug("playing_frame setup done");
 
-  this->history_frame->registerCell("cell", view::MediaCell::create);
+  this->history_frame->registerCell("cell", view::ThumbCell::create);
   // this->history_frame->setDataSource(getHistory());
   this->history_frame->setVisibility(brls::Visibility::GONE);
   brls::Logger::debug("history_frame setup done");
 }
 
-brls::View* Home::create() { return new Home(); }
+brls::View* HomeTab::create() { return new HomeTab(); }
 
-void Home::onCreate() {
+void HomeTab::onCreate() {
     this->registerAction("dou", brls::BUTTON_X, [this](...) {
         brls::Logger::debug("Pressed the dou button");
         this->playing_frame->setVisibility(brls::Visibility::VISIBLE);

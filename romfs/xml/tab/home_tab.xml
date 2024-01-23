@@ -1,0 +1,77 @@
+<brls:Box
+  width="auto"
+  height="auto">
+
+  <brls:ScrollingFrame
+    width="auto"
+    height="auto"
+    marginTop="0"
+    grow="1.0">
+
+    <brls:Box
+      width="auto"
+      height="auto"
+      axis="column"
+      alignItems="stretch"
+      paddingLeft="@style/brls/tab_frame/content_padding_sides"
+      paddingRight="@style/brls/tab_frame/content_padding_sides"
+      paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
+      paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">
+
+      <brls:Header
+        id="home_tab/playing_header"
+        width="auto"
+        height="auto"
+        title="@i18n/main/home_tab/playing_header"
+        marginBottom="10px"/>
+
+      <HRecyclerFrame
+        id="home_tab/playing_frame"
+        width="auto"
+        height="200"
+        itemWidth="200"/>
+
+      <brls:Box
+        id="home_tab/playing_hint"
+        width="100%"
+        height="200"
+        alignItems="center"
+        justifyContent="center">
+
+        <brls:Label
+          textColor="@theme/brls/header/subtitle"
+          text="@i18n/main/home_tab/playing_hint"/>
+
+      </brls:Box>
+
+      <brls:Header
+        id="home_tab/history_header"
+        width="auto"
+        height="auto"
+        title="@i18n/main/home_tab/history_header"
+        marginBottom="10px"/>
+
+      <HRecyclerFrame
+        id="home_tab/history_frame"
+        width="auto"
+        height="200"
+        itemWidth="200"/>
+        
+      <brls:Box
+        id="home_tab/history_hint"
+        width="100%"
+        height="200"
+        alignItems="center"
+        justifyContent="center">
+
+        <brls:Label
+          textColor="@theme/brls/header/subtitle"
+          text="@i18n/main/home_tab/history_hint"/>
+
+      </brls:Box>
+
+    </brls:Box>
+
+  </brls:ScrollingFrame>
+
+</brls:Box>

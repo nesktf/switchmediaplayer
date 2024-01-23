@@ -1,7 +1,7 @@
 #include "ui/view/media_browser.hpp"
 
 #include "ui/view/video_player.hpp"
-#include "ui/view/media_cell.hpp"
+#include "ui/view/object/thumb_cell.hpp"
 
 #include "core/db/database.hpp"
 
