@@ -16,7 +16,7 @@
       padding="20px">
 
     <brls:Label
-      id="media_browser/path_label"
+      id="media_browser/title"
       fontSize="15"
       text="path_label"/>
 

@@ -12,7 +12,7 @@ enum MediaCellType {
   Image   = 4
 };
 
-template<typename T>
+template<typename T, typename K>
 class MediaBrowser : public brls::Box {
 public: 
   MediaBrowser() {
@@ -20,21 +20,18 @@ public:
     this->content_frame->registerCell("cell", view::ThumbCell::create);
   }
 
-  void setPath(const std::string& path) {
-    this->curr_path = path;
-    this->path_label->setText(path);
-    this->content_frame->setDataSource(getContents(path));
+  void setContents(const K& key, const std::string& title) {
+    this->title->setText(title);
+    this->content_frame->setDataSource(getContents(key));
     // Focus first cell (maybe find a better way?)
     brls::sync([this]() { brls::Application::giveFocus(content_frame); }); 
   }
 
   void init();
 
-  virtual ThumbCellSource<T>* getContents(const std::string& path) = 0;
+  virtual ThumbCellSource<T>* getContents(const K& key) = 0;
 protected:
   BRLS_BIND(view::RecyclingGrid, content_frame, "media_browser/content");
-  BRLS_BIND(brls::Label, path_label, "media_browser/path_label");
-
-  std::string curr_path;
+  BRLS_BIND(brls::Label, title, "media_browser/title");
 };
 }

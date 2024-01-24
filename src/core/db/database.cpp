@@ -17,11 +17,13 @@ inline std::string orderStr(const std::string& name, core::Database::SortOrder o
   if (order == core::Database::SortOrder::Random) {
     end += "RANDOM() ";
   } else if (order == core::Database::SortOrder::Asc) {
-    end += fmt::format("{} ASC ", name);
+    end += fmt::format("{} ASC", name);
   } else if (order == core::Database::SortOrder::Desc) {
-    end += fmt::format("{} DESC ", name);
+    end += fmt::format("{} DESC", name);
   }
-  end += fmt::format("LIMIT {}", limit);
+  if (limit != 0) {
+    end += fmt::format(" LIMIT {}", limit);
+  }
 
   return end;
 }
@@ -336,7 +338,8 @@ int Database::insertGetArtist(const std::string& name) {
 std::vector<mediadata::ThumbCellData<int>> Database::getAlbumCells(SortOrder order, unsigned int limit) {
   std::vector<mediadata::ThumbCellData<int>> out;
 
-  db->prepareExec("SELECT ID, Title, Artists, Cover FROM Albums;");
+  const std::string sql = fmt::format("SELECT ID, Title, Artists, Cover FROM Albums {};", orderStr("Title", order, limit));
+  db->prepareExec(sql);
   while (db->hasRow()) {
     mediadata::ThumbCellData<int> data;
     db->getInt(0, data.data);

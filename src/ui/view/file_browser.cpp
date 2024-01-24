@@ -65,7 +65,7 @@ public:
   void onItemSelected(brls::View* recycler, size_t index) override {
     auto& item = data[index];
     if (item.data.type == MediaCellType::Folder) {
-      item.data.view->setPath(item.data.path);
+      item.data.view->setContents(item.data.path, item.data.path);
     } else {
       VideoPlayer* player = new VideoPlayer();
       player->openFile(item.data.path);
@@ -78,7 +78,7 @@ private:
 };
 
 FileBrowser::FileBrowser(const std::string& path) {
-  this->setPath(path);
+  this->setContents(path, path);
 }
 
 ThumbCellSource<FileData>* FileBrowser::getContents(const std::string& path) { 

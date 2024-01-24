@@ -11,7 +11,7 @@ struct FileData {
   FileBrowser* view;
 };
 
-class FileBrowser : public MediaBrowser<FileData> {
+class FileBrowser : public MediaBrowser<FileData, std::string> {
 public:
   FileBrowser(const std::string& path);
 

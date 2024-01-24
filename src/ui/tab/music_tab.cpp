@@ -3,21 +3,39 @@
 #include "ui/view/album_view.hpp"
 #include "ui/view/object/thumb_cell.hpp"
 #include "ui/view/file_browser.hpp"
+#include "ui/view/album_browser.hpp"
 
 #include "core/db/database.hpp"
 
 namespace tab {
-class AudioCategorySource : public view::ThumbCellSource<int> {
+enum class AudioCategories {
+  Albums,
+  Genres,
+  Artists,
+  Songs
+};
+
+class AudioCategorySource : public view::ThumbCellSource<AudioCategories> {
 public:
   AudioCategorySource() {
     this->data = {
-      {.data = 0, .title = "Albums",},
-      {.data = 1, .title = "Genres"}, 
-      {.data = 2, .title = "Artists"},
-      {.data = 3, .title = "Songs"}
+      {.data = AudioCategories::Albums, .title = "Albums",},
+      {.data = AudioCategories::Genres, .title = "Genres"}, 
+      {.data = AudioCategories::Artists, .title = "Artists"},
+      {.data = AudioCategories::Songs, .title = "Songs"}
     };
   };
   void onItemSelected(brls::View* recycler, size_t index) override {
+    auto& item = data[index];
+    switch (item.data) {
+      case AudioCategories::Albums: {
+        recycler->present(new view::AlbumBrowser());
+        break;
+      }
+      default: {
+
+      }
+    }
   }
 };
 
@@ -25,7 +43,7 @@ class AlbumListSource : public view::ThumbCellSource<int> {
 public:
   AlbumListSource() {
     auto& db = core::Database::instance();
-    data = db.getAlbumCells(core::Database::SortOrder::Desc, 10);
+    data = db.getAlbumCells(core::Database::SortOrder::Asc, 5);
   }
   void onItemSelected(brls::View* recycler, size_t index) override {
     recycler->present(new view::AlbumView(data[index].data));
