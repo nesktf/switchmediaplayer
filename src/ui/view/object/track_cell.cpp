@@ -72,7 +72,7 @@ RecyclingGridItem* TrackDataSource::cellForRow(RecyclingView* recycler, size_t i
 void TrackDataSource::onItemSelected(brls::View* recycler, size_t index) {
   auto& item = data[index];
   auto& player = MusicPlayer::instance();
-  player.setCurrent(item);
+  player.addItemAndPlay(item);
   recycler->present(new MusicPlayerView());
 }
 }

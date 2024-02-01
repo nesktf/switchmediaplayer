@@ -55,8 +55,16 @@
         height="auto"
         justifyContent="center">
 
-        <brls:Label
-          text="queue_contents" />
+      <RecyclerGrid
+        id="music_player/queue"
+        grow="1"
+        wireframe="false"
+        paddingLeft="30"
+        paddingRight="30"
+        spanCount="1"
+        itemHeight="50"
+        itemSpace="5"
+        focusable="true" />
 
       </brls:Box>
 
